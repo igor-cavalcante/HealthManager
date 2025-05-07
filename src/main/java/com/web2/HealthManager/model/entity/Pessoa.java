@@ -2,13 +2,14 @@ package com.web2.HealthManager.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Pessoa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String nome;
@@ -29,6 +30,5 @@ public abstract class Pessoa {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
 
 }

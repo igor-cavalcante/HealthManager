@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <title>Gerência - HealthManager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>HealtManager</h1>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Painel de Gerência</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Card Pacientes -->
+        <a href="/clinica/paciente" class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 text-center">
+            <h2 class="text-xl font-semibold text-blue-600 mb-2">Pacientes</h2>
+            <p class="text-gray-600">Gerencie os dados dos pacientes da clínica.</p>
+        </a>
+
+        <!-- Card Médicos -->
+        <a href="/clinica/medico" class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 text-center">
+            <h2 class="text-xl font-semibold text-blue-600 mb-2">Médicos</h2>
+            <p class="text-gray-600">Adicione ou edite os médicos cadastrados.</p>
+        </a>
+
+        <!-- Card Consultas -->
+        <a href="/clinica/consulta" class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 text-center">
+            <h2 class="text-xl font-semibold text-blue-600 mb-2">Consultas</h2>
+            <p class="text-gray-600">Acompanhe ou agende novas consultas.</p>
+        </a>
+    </div>
+</div>
 
 </body>
 </html>

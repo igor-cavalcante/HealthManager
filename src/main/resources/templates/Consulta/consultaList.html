@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pacientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Navbar Responsiva -->
+<nav class="bg-blue-600 text-white px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="text-xl font-bold">HealthManager</div>
+        <div class="md:hidden">
+            <button id="menu-btn" class="focus:outline-none">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                    <path d="M4 5h16M4 12h16M4 19h16"/>
+                </svg>
+            </button>
+        </div>
+        <ul class="hidden md:flex space-x-6">
+            <li><a href="/clinica/paciente" class="hover:underline">Pacientes</a></li>
+            <li><a href="/clinica/medico" class="hover:underline">Médicos</a></li>
+            <li><a href="/clinica/consulta" class="hover:underline">Consultas</a></li>
+            <li><a href="/clinica/gerencia" class="hover:underline">Gerência</a></li>
+        </ul>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden mt-2 space-y-2 px-4">
+        <a href="/clinica/paciente" class="block">Pacientes</a>
+        <a href="/clinica/medico" class="block">Médicos</a>
+        <a href="/clinica/consulta" class="block">Consultas</a>
+        <a href="/clinica/gerencia" class="block">Gerência</a>
+    </div>
+</nav>
+
+<!-- Conteúdo principal -->
+<div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Lista de Consultas</h1>
+</div>
+
+<!-- Script para ativar menu mobile -->
+<script>
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+</script>
+
+</body>
+</html>
