@@ -1,4 +1,9 @@
 package com.web2.HealthManager.model.repository;
 
-public class ConsultaRepository {
+import com.web2.HealthManager.model.entity.Consulta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 }
