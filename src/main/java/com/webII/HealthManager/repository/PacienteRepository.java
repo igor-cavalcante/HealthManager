@@ -19,5 +19,10 @@ public class PacienteRepository {
 
     public List<PacienteEntity> pacientes() {
     return em.createQuery("from PacienteEntity", PacienteEntity.class).getResultList();
-        }
+        };
+
+
+        public PacienteEntity paciente(Long id) {
+        return em.find(PacienteEntity.class, id);
+        };
 }

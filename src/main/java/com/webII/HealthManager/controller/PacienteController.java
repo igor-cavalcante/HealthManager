@@ -1,4 +1,4 @@
-package com.webII.HealthManager.controller.jpa;
+package com.webII.HealthManager.controller;
 
 import com.webII.HealthManager.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
