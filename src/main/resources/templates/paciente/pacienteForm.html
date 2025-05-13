@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Formulário de Paciente</title>
+</head>
+<body>
+
+<h2>Editar Paciente</h2>
+
+<form th:action="@{/consultorio/paciente/editar}" method="post">
+	
+	<label for="nome">Nome:</label>
+	<input type="text" id="nome" name="nome" th:value="${paciente.nome}" required />
+	<br><br>
+	
+	<label for="telefone">Telefone:</label>
+	<input type="text" id="telefone" name="telefone" th:value="${paciente.telefone}" required />
+	<br><br>
+	
+	<button type="submit">Salvar</button>
+	<a th:href="@{/consultorio/paciente}">Cancelar</a>
+</form>
+
+</body>
+</html>

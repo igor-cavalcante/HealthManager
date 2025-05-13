@@ -17,12 +17,28 @@ public class PacienteRepository {
     @PersistenceContext
     private EntityManager em;
 
+
+    public void save(PacienteEntity paciente){
+        em.persist(paciente);
+    }
+
+
     public List<PacienteEntity> pacientes() {
     return em.createQuery("from PacienteEntity", PacienteEntity.class).getResultList();
         };
 
+    public PacienteEntity paciente(Long id_paciente) {
+        return em.find(PacienteEntity.class,id_paciente);
+    };
 
-        public PacienteEntity paciente(Long id) {
-        return em.find(PacienteEntity.class, id);
-        };
+    public void update(PacienteEntity paciente){
+        em.merge(paciente);
+    }
+
+    public void remove (Long id){
+        PacienteEntity p = paciente(id);
+        if (p != null){
+            em.remove(p);
+        }
+    }
 }

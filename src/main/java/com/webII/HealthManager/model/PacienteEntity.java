@@ -9,17 +9,17 @@ import java.io.Serializable;
 public class PacienteEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_paciente;
     private String nome;
     private  String telefone;
 
 
     public Long getId() {
-        return id;
+        return id_paciente;
     }
     public void setId(Long id) {
-        this.id = id;
+        this.id_paciente = id;
     }
 
     public String getNome() {
