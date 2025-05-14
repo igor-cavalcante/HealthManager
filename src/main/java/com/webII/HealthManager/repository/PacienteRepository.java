@@ -32,7 +32,12 @@ public class PacienteRepository {
     };
 
     public void update(PacienteEntity paciente){
-        em.merge(paciente);
+        // Verifica se o ID está presente para evitar inserção
+        if (paciente.getId() != null && em.find(PacienteEntity.class, paciente.getId()) != null) {
+            em.merge(paciente);
+        } else {
+            throw new IllegalArgumentException("Paciente não encontrado para atualização");
+        }
     }
 
     public void remove (Long id){

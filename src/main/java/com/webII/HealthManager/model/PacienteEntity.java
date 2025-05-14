@@ -10,6 +10,7 @@ public class PacienteEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_paciente")
     private Long id_paciente;
     private String nome;
     private  String telefone;
