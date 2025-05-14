@@ -1,5 +1,6 @@
 package com.webII.HealthManager.controller;
 
+import com.webII.HealthManager.model.ConsultaEntity;
 import com.webII.HealthManager.model.PacienteEntity;
 import com.webII.HealthManager.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,20 +8,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/consultorio/paciente")
 public class PacienteController {
 
-
-    @Autowired
-    PacienteRepository PacienteRepository;
     @Autowired
     private PacienteRepository pacienteRepository;
 
     @GetMapping
     public String paciente(Model model) {
-        model.addAttribute("pacientes", PacienteRepository.pacientes());
-        System.out.println(PacienteRepository.pacientes());
+        model.addAttribute("pacientes", pacienteRepository.pacientes());
+        System.out.println(pacienteRepository.pacientes());
         return "paciente/pacienteList";
     }
 
@@ -54,7 +54,7 @@ public class PacienteController {
 
     @GetMapping("/editar/{id}")
     public String pacienteEdit(@PathVariable Long id, Model model){
-        PacienteEntity paciente = PacienteRepository.paciente(id);
+        PacienteEntity paciente = pacienteRepository.paciente(id);
         model.addAttribute("paciente",paciente);
         return "paciente/pacienteForm";
     }
@@ -70,4 +70,19 @@ public class PacienteController {
         }
         return "redirect:/consultorio/paciente";
     }
+
+    @GetMapping("/{id}/consultas")
+    public String listarConsultas(@PathVariable Long id, Model model) {
+        PacienteEntity paciente = pacienteRepository.paciente(id);
+        if (paciente != null) {
+            model.addAttribute("consultas", paciente.getConsultas());
+            model.addAttribute("pacienteNome", paciente.getNome());
+            return "paciente/pacienteConsultas";
+        } else {
+            model.addAttribute("mensagemErro", "Paciente não encontrado.");
+            return "erro";
+        }
+    }
+
+
 }

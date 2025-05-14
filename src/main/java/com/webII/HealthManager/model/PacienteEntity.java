@@ -2,34 +2,20 @@ package com.webII.HealthManager.model;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@Table(name = "paciente")
-public class PacienteEntity implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_paciente")
-    private Long id_paciente;
-    private String nome;
-    private  String telefone;
+@DiscriminatorValue("PACIENTE")
+public class PacienteEntity extends Pessoa {
 
 
-    public Long getId() {
-        return id_paciente;
-    }
-    public void setId(Long id) {
-        this.id_paciente = id;
-    }
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ConsultaEntity> consultas;
 
-    public String getNome() {
-        return nome;
-    }
+    public List<ConsultaEntity> getConsultas() { return consultas; }
+    public void setConsultas(List<ConsultaEntity> consultas) { this.consultas = consultas; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    private String telefone;
 
     public String getTelefone() {
         return telefone;
@@ -38,7 +24,5 @@ public class PacienteEntity implements Serializable {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-
-
 
 }

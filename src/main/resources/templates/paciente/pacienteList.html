@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 
-<style>
-
-
-
-</style>
 <body>
 
 <!-- Incluindo o fragmento de cabeçalho -->
@@ -38,6 +33,7 @@
         <td th:text="${paciente.telefone}" >1234</td>
 
         <td>
+            <a th:href="@{/consultorio/paciente/{id}/consultas(id=${paciente.id})}" class="btn btn-info">Ver Consultas</a>
             <a class="" th:href="@{/consultorio/paciente/novo}"><i class="bi bi-plus-circle-fill"></i></a>
             <a class="" th:href="@{/consultorio/paciente/editar/{id}(id=${paciente.id})}"><i class="bi bi-pencil-square text-primary "></i></a>
             <a th:href="@{/consultorio/paciente/deletar/{id}(id=${paciente.id})}"><i class="bi bi-trash3 text-danger"></i></a>
@@ -50,7 +46,6 @@
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 

@@ -1,6 +1,7 @@
 package com.webII.HealthManager.repository;
 
 
+import com.webII.HealthManager.model.ConsultaEntity;
 import com.webII.HealthManager.model.PacienteEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,7 +22,6 @@ public class PacienteRepository {
     public void save(PacienteEntity paciente){
         em.persist(paciente);
     }
-
 
     public List<PacienteEntity> pacientes() {
     return em.createQuery("from PacienteEntity", PacienteEntity.class).getResultList();
@@ -45,5 +45,10 @@ public class PacienteRepository {
         if (p != null){
             em.remove(p);
         }
+    }
+
+    public List<ConsultaEntity> consultasPorPaciente(Long idPaciente) {
+        PacienteEntity paciente = paciente(idPaciente);
+        return paciente != null ? paciente.getConsultas() : List.of();
     }
 }

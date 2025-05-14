@@ -20,17 +20,15 @@ CREATE TABLE paciente (
 
 -- Criando a tabela consulta
 CREATE TABLE consulta (
-    id_consulta SERIAL PRIMARY KEY,
-    data DATE NOT NULL,
-    valor NUMERIC(10, 2) NOT NULL,
-    observacao TEXT,
-    id_paciente INTEGER NOT NULL,
-    id_medico INTEGER NOT NULL,
-    FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente),
-    FOREIGN KEY (id_medico) REFERENCES medico(id_med)
+        id_consulta SERIAL PRIMARY KEY,
+        data DATE NOT NULL,
+        valor NUMERIC(10, 2) NOT NULL,
+        observacao TEXT,
+        id_paciente INTEGER NOT NULL,
+        id_medico INTEGER NOT NULL,
+        FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente) ON DELETE CASCADE,
+        FOREIGN KEY (id_medico) REFERENCES medico(id_med) ON DELETE CASCADE
 );
-
-
 
 -- Médicos
 INSERT INTO medico (nome, crm) VALUES 
