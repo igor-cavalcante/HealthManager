@@ -15,14 +15,14 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header text-center bg-primary text-white">
-                    <h2 th:text="${paciente.id == null ? 'Novo Paciente' : 'Editar Paciente'}"></h2>
+                    <h2 th:text="${meidico.id == null ? 'Novo Medico ' : 'Editar Medico'}"></h2>
                 </div>
                 <div class="card-body">
                     <!-- Rota dinâmica: se o paciente tiver ID, chama editar; se não, chama salvar -->
-                    <form th:action="@{${paciente.id == null ? '/consultorio/paciente/salvar' : '/consultorio/paciente/editar'}}" method="post">
+                    <form th:action="@{${medico.id == null ? '/consultorio/medico/salvar' : '/consultorio/medico/editar'}}" method="post">
 
                         <!-- Campo oculto para enviar o ID (apenas se existir) -->
-                        <input type="hidden" name="id" th:if="${paciente.id != null}" th:value="${paciente.id}" />
+                        <input type="hidden" name="id" th:if="${medico.id != null}" th:value="${medico.id}" />
 
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome:</label>
@@ -30,13 +30,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="telefone" class="form-label">Telefone:</label>
-                            <input type="text" class="form-control" id="telefone" name="telefone" th:value="${paciente.telefone}" required placeholder="Digite o telefone">
+                            <label for="CRM" class="form-label">CRM:</label>
+                            <input type="text" class="form-control" id="crm" name="crm" th:value="${medico.crm}" required placeholder="Digite o crm">
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-success" th:text="${paciente.id == null ? 'Salvar' : 'Atualizar'}"></button>
-                            <a class="btn btn-secondary" th:href="@{/consultorio/paciente}">Cancelar</a>
+                            <button type="submit" class="btn btn-success" th:text="${medico.id == null ? 'Salvar' : 'Atualizar'}"></button>
+                            <a class="btn btn-secondary" th:href="@{/consultorio/medico}">Cancelar</a>
                         </div>
                     </form>
                 </div>
