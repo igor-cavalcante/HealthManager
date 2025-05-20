@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-br" th:replace="~{fragments/layout :: layout(~{::head},~{::main})}">
+<html th:replace="~{fragments/layout :: layout(~{::head},~{::main})}">
 
-<head th:replace="~{fragments/head :: head('Lista de Pacientes', ~{})}">
+<head th:replace="~{fragments/head :: head(~{::title}, ~{})}">
+    <title>Pecientes</title>
 </head>
+
 <body>
 
 <main  class="d-flex flex-column min-vh-100">
