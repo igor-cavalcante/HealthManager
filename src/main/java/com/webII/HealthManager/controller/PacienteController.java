@@ -50,8 +50,6 @@ public class PacienteController {
         return "redirect:/";
     }
 
-
-
     @GetMapping("/editar/{id}")
     public String pacienteEdit(@PathVariable Long id, Model model){
         PacienteEntity paciente = pacienteRepository.paciente(id);
