@@ -11,7 +11,6 @@ import java.io.Serializable;
 @Table(name = "pessoa")
 public abstract class Pessoa implements Serializable {
 
-
     @Id
     @GeneratedValue(generator = "inc")
     @GenericGenerator(name = "inc", strategy = "increment")
@@ -24,6 +23,5 @@ public abstract class Pessoa implements Serializable {
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
-
 
 }
