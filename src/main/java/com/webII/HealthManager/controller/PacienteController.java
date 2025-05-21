@@ -38,11 +38,7 @@ public class PacienteController {
 
     // Rota para salvar novo paciente
     @PostMapping("/salvar")
-    public String savePaciente(@ModelAttribute("paciente") @Valid PacienteEntity paciente, Model model, BindingResult result) {
-        if(result.hasErrors()) {
-            return "paciente/pacienteForm";
-        }
-
+    public String savePaciente(@ModelAttribute("paciente")  PacienteEntity paciente, Model model) {
         try {
             pacienteRepository.save(paciente);
         } catch (IllegalArgumentException e) {

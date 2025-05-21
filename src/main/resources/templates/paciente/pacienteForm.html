@@ -22,21 +22,16 @@
 
 						<div class="mb-3">
 							<label for="nome" class="form-label"
-								   th:if="${#fields.hasErrors('fieldName')}"
-								   th:errors="*{fieldName}" >Nome:</label>
+								  >Nome:</label>
 							<input type="text" class="form-control " id="nome" name="nome"
 								   th:value="${paciente.nome}"
-								   th:field="*{fieldName}"
-								   th:errorclass="is-invalid"
+
 								   placeholder="Digite o nome">
 						</div>
 
 						<div class="mb-3">
-							<label for="telefone" class="form-label"
-								   th:if="${#fields.hasErrors('fieldName')}"
-								   th:errors="*{fieldName}">Telefone:</label>
+							<label for="telefone" class="form-label">Telefone:</label>
 							<input type="text" class="form-control" id="telefone" name="telefone"
-								   th:field="*{fieldName}" th:errorclass="is-invalid"
 								   th:value="${paciente.telefone}"  placeholder="Digite o telefone">
 						</div>
 

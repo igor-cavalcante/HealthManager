@@ -10,8 +10,6 @@ import java.util.List;
 @DiscriminatorValue("PACIENTE")
 public class PacienteEntity extends Pessoa {
 
-    @NotBlank(message = "O telefone é obrigatório")
-    @Size(min = 14, max = 15, message = "Telefone deve ter entre 14 e 15 caracteres")
     private String telefone;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
