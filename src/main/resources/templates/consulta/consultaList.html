@@ -7,43 +7,59 @@
 <body>
 
 <main class="d-flex flex-column min-vh-100">
-	<div class="content d-flex flex-column align-items-center justify-content-center py-3">
-		<h1 class="text-center py-2">Lista de Consultas</h1>
-		<div class="table-responsive w-50 shadow-lg p-3 mb-5 bg-white rounded">
-			<table class="table table-hover text-center" border="1">
-				<thead>
-				<tr>
-					<th scope="col">ID</th>
-					<th scope="col">Data</th>
-					<th scope="col">Valor</th>
-					<th scope="col">Observação</th>
-					<th scope="col">Médico</th>
-					<th scope="col">Paciente</th>
-					<th scope="col">Ações</th>
-				</tr>
-				</thead>
-				<tbody class="table-group-divider">
-				<tr th:each="consulta : ${consultas}">
-					<th scope="row" th:text="${consulta.idConsulta}"></th>
-					<td th:text="${#dates.format(consulta.data, 'dd/MM/yyyy')}"></td>
-					<td th:text="${consulta.valor}"></td>
-					<td th:text="${consulta.observacao}"></td>
-					<td th:text="${consulta.medico.nome}"></td>
-					<td th:text="${consulta.paciente.nome}"></td>
-					<td>
-						<a class="" th:href="@{/consultorio/consulta/nova}">
-							<i class="bi bi-plus-circle-fill"></i>
-						</a>
-						<a th:href="@{/consultorio/consulta/deletar/{id}(id=${consulta.idConsulta})}">
-							<i class="bi bi-trash3 text-danger"></i>
-						</a>
-						<a th:href="@{/consultorio/consulta/editar/{id}(id=${consulta.idConsulta})}">
-							<i class="bi bi-pencil-square text-primary"></i>
-						</a>
-					</td>
-				</tr>
-				</tbody>
-			</table>
+	<div class="container-fluid py-3">
+		<div class="row justify-content-center">
+			<div class="col-12">
+				<h1 class="text-center py-2">Lista de Consultas</h1>
+
+				<div class="table-responsive shadow-lg p-3 mb-5 bg-white rounded">
+					<table class="table table-hover text-center">
+						<thead class="table-dark">
+						<tr>
+							<th scope="col">ID</th>
+							<th scope="col" class="d-none d-md-table-cell">Data</th>
+							<th scope="col">Valor</th>
+							<th scope="col" class="d-none d-lg-table-cell">Observação</th>
+							<th scope="col">Médico</th>
+							<th scope="col">Paciente</th>
+							<th scope="col">Ações</th>
+						</tr>
+						</thead>
+						<tbody class="table-group-divider">
+						<tr th:each="consulta : ${consultas}">
+							<th scope="row" th:text="${consulta.idConsulta}"></th>
+							<td class="d-none d-md-table-cell" th:text="${#dates.format(consulta.data, 'dd/MM/yyyy')}"></td>
+							<td th:text="${'R$ ' + consulta.valor}"></td>
+							<td class="d-none d-lg-table-cell">
+								<span th:if="${consulta.observacao}" th:text="${consulta.observacao}"></span>
+								<span th:unless="${consulta.observacao}" class="text-muted">-</span>
+							</td>
+							<td th:text="${consulta.medico.nome}"></td>
+							<td th:text="${consulta.paciente.nome}"></td>
+							<td>
+								<div class="d-flex flex-wrap justify-content-center gap-2">
+									<a th:href="@{/consultorio/consulta/nova}"
+									   class="btn btn-success btn-sm"
+									   title="Nova consulta">
+										<i class="bi bi-plus-circle-fill"></i>
+									</a>
+									<a th:href="@{/consultorio/consulta/editar/{id}(id=${consulta.idConsulta})}"
+									   class="btn btn-primary btn-sm"
+									   title="Editar">
+										<i class="bi bi-pencil-square"></i>
+									</a>
+									<a th:href="@{/consultorio/consulta/deletar/{id}(id=${consulta.idConsulta})}"
+									   class="btn btn-danger btn-sm"
+									   title="Excluir">
+										<i class="bi bi-trash3"></i>
+									</a>
+								</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </main>

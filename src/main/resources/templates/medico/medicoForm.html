@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Formulário de Médico</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+<html th:replace="~{fragments/layout :: layout(~{::head},~{::main})}">
+
+<head th:replace="~{fragments/head :: head(~{::title}, ~{})}">
+    <title>Form Medico</title>
 </head>
 <body>
-
-<!-- Incluindo o fragmento de cabeçalho -->
-<div th:replace="~{fragments/header :: header}"></div>
 
 <main class="d-flex flex-column min-vh-100">
     <div class="content d-flex flex-column align-items-center justify-content-center py-3">
@@ -45,10 +41,6 @@
     </div>
 </main>
 
-<!-- Incluindo o fragmento de rodapé -->
-<div th:replace="~{fragments/footer :: footer}"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
