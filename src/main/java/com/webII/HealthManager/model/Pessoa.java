@@ -1,6 +1,7 @@
 package com.webII.HealthManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public abstract class Pessoa implements Serializable {
     @GenericGenerator(name = "inc", strategy = "increment")
     private Long id;
 
+    @NotBlank
     private String nome;
 
     public Long getId() { return id; }

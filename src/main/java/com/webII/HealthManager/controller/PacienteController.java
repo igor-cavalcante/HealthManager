@@ -3,11 +3,15 @@ package com.webII.HealthManager.controller;
 import com.webII.HealthManager.model.ConsultaEntity;
 import com.webII.HealthManager.model.PacienteEntity;
 import com.webII.HealthManager.repository.PacienteRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Binding;
+import javax.xml.transform.Result;
 import java.util.List;
 
 @Controller
@@ -26,7 +30,7 @@ public class PacienteController {
 
     // Rota para abrir o formulário de novo paciente
     @GetMapping("/novo")
-    public String novoPaciente(Model model) {
+    public String form(Model model, PacienteEntity paciente) {
         model.addAttribute("paciente", new PacienteEntity());
         return "paciente/pacienteForm";
     }
@@ -34,7 +38,11 @@ public class PacienteController {
 
     // Rota para salvar novo paciente
     @PostMapping("/salvar")
-    public String savePaciente(@ModelAttribute("paciente") PacienteEntity paciente, Model model) {
+    public String savePaciente(@ModelAttribute("paciente") @Valid PacienteEntity paciente, Model model, BindingResult result) {
+        if(result.hasErrors()) {
+            return "paciente/pacienteForm";
+        }
+
         try {
             pacienteRepository.save(paciente);
         } catch (IllegalArgumentException e) {
