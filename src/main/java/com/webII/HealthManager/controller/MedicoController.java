@@ -79,4 +79,17 @@ public class MedicoController {
                 return "erro";
             }
         }
+
+    @GetMapping("/search/")
+    public String buscarMedico( @RequestParam(required = false) String name, Model model) {
+        if(name != null && !name.isEmpty()) {
+            model.addAttribute("medicos", medicoRepository.buscarPorNome(name));
+        } else {
+            model.addAttribute("medicos", medicoRepository.medicos());
+        }
+        return "medico/medicoList";
+    }
+
+
+
 }

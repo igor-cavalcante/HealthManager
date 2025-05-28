@@ -86,5 +86,15 @@ public class PacienteController {
         }
     }
 
+    @GetMapping("/search/")
+    public String buscarPaciente( @RequestParam(required = false) String name, Model model) {
+        if(name != null && !name.isEmpty()) {
+            model.addAttribute("pacientes", pacienteRepository.SearchByName(name));
+        } else {
+            model.addAttribute("pacientes", pacienteRepository.pacientes());
+        }
+        return "paciente/pacienteList";
+    }
+
 
 }
