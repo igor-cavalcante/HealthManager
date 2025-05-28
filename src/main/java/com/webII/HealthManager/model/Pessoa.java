@@ -1,6 +1,7 @@
 package com.webII.HealthManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.io.Serializable;
