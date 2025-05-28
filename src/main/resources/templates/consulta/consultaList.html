@@ -62,7 +62,12 @@
 							<th scope="col" class="d-none d-lg-table-cell">Observação</th>
 							<th scope="col">Médico</th>
 							<th scope="col">Paciente</th>
-							<th scope="col">Ações</th>
+
+							<th>	<a th:href="@{/consultorio/consulta/nova}"
+									   class="btn btn-success btn-sm"
+									   title="Nova consulta">
+								<i class="bi bi-plus-circle-fill"></i>
+							</a></th>
 						</tr>
 						</thead>
 						<tbody class="table-group-divider">
@@ -78,11 +83,7 @@
 							<td th:text="${consulta.paciente.nome}"></td>
 							<td>
 								<div class="d-flex flex-wrap justify-content-center gap-2">
-									<a th:href="@{/consultorio/consulta/nova}"
-									   class="btn btn-success btn-sm"
-									   title="Nova consulta">
-										<i class="bi bi-plus-circle-fill"></i>
-									</a>
+
 									<a th:href="@{/consultorio/consulta/editar/{id}(id=${consulta.idConsulta})}"
 									   class="btn btn-primary btn-sm"
 									   title="Editar">
