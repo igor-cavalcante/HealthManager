@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -37,6 +38,31 @@ public class ConsultaRepository {
     public void remove(Long id) {
         ConsultaEntity c = consulta(id);
         if (c != null) em.remove(c);
+    }
+
+    // Novos métodos de busca:
+    public List<ConsultaEntity> buscarPorPacienteNome(String nome) {
+        return em.createQuery(
+                        "SELECT c FROM ConsultaEntity c JOIN c.paciente p WHERE p.nome LIKE :nome",
+                        ConsultaEntity.class)
+                .setParameter("nome", "%" + nome + "%")
+                .getResultList();
+    }
+
+    public List<ConsultaEntity> buscarPorMedicoNome(String nome) {
+        return em.createQuery(
+                        "SELECT c FROM ConsultaEntity c JOIN c.medico m WHERE m.nome LIKE :nome",
+                        ConsultaEntity.class)
+                .setParameter("nome", "%" + nome + "%")
+                .getResultList();
+    }
+
+    public List<ConsultaEntity> buscarPorData(LocalDate data) {
+        return em.createQuery(
+                        "SELECT c FROM ConsultaEntity c WHERE DATE(c.data) = DATE(:data)",
+                        ConsultaEntity.class)
+                .setParameter("data", data.atStartOfDay())
+                .getResultList();
     }
 
 

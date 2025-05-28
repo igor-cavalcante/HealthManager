@@ -48,4 +48,12 @@ public class MedicoRepository {
         MedicoEntity medico = medico(idMedico);
         return medico != null ? medico.getConsultas() : List.of();
     }
+
+    public List<MedicoEntity> buscarPorNome(String nome) {
+        return em.createQuery(
+                        "FROM MedicoEntity m WHERE m.nome LIKE :nome",
+                        MedicoEntity.class)
+                .setParameter("nome", "%" + nome + "%")
+                .getResultList();
+    }
 }

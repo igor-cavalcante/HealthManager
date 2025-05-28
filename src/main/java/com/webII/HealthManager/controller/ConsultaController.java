@@ -7,10 +7,12 @@ import com.webII.HealthManager.repository.ConsultaRepository;
 import com.webII.HealthManager.repository.MedicoRepository;
 import com.webII.HealthManager.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -129,6 +131,32 @@ public class ConsultaController {
     public String deletarConsulta(@PathVariable Long id) {
         consultaRepository.remove(id);
         return "redirect:/consultorio/consulta";
+    }
+
+
+    @GetMapping("/search")
+    public String searchConsultas(
+            @RequestParam(required = false) String paciente,
+            @RequestParam(required = false) String medico,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate data,
+            Model model) {
+
+        if (paciente != null && !paciente.isEmpty()) {
+            model.addAttribute("consultas", consultaRepository.buscarPorPacienteNome(paciente));
+        }
+        if (medico != null && !medico.isEmpty()) {
+            model.addAttribute("consultas", consultaRepository.buscarPorMedicoNome(medico));
+        }
+        if (data != null) {
+            model.addAttribute("consultas", consultaRepository.buscarPorData(data));
+        }
+        if ((paciente == null || paciente.isEmpty()) &&
+                (medico == null || medico.isEmpty()) &&
+                data == null) {
+            model.addAttribute("consultas", consultaRepository.consultas());
+        }
+
+        return "consulta/consultaList";
     }
 
 }

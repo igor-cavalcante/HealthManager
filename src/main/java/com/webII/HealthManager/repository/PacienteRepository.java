@@ -66,4 +66,11 @@ public class PacienteRepository {
         PacienteEntity paciente = paciente(idPaciente);
         return paciente != null ? paciente.getConsultas() : List.of();
     }
+
+    public List<PacienteEntity> SearchByName (String name){
+        return em.createQuery("FROM PacienteEntity p WHERE p.nome like :nome", PacienteEntity.class)
+                .setParameter("nome", "%" + name + "%")
+                .getResultList();
+    }
+
 }
