@@ -27,12 +27,6 @@ public class PacienteRepository {
     return em.createQuery("from PacienteEntity", PacienteEntity.class).getResultList();
         };
 
-    public List<PacienteEntity> buscarNome(String nome) {
-        return em.createQuery("FROM PacienteEntity p WHERE p.nome like:nome",PacienteEntity.class)
-                .setParameter("nome","%"+nome+"%")
-                .getResultList();
-    }
-
     public PacienteEntity paciente(Long id_paciente) {
         return em.find(PacienteEntity.class,id_paciente);
     };
@@ -60,11 +54,6 @@ public class PacienteRepository {
         if (p != null){
             em.remove(p);
         }
-    }
-
-    public List<ConsultaEntity> consultasPorPaciente(Long idPaciente) {
-        PacienteEntity paciente = paciente(idPaciente);
-        return paciente != null ? paciente.getConsultas() : List.of();
     }
 
     public List<PacienteEntity> SearchByName (String name){
