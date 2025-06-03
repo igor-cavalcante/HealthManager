@@ -17,6 +17,7 @@ public abstract class Pessoa implements Serializable {
     @GenericGenerator(name = "inc", strategy = "increment")
     private Long id;
 
+    @NotBlank
     private String nome;
 
     public Long getId() { return id; }

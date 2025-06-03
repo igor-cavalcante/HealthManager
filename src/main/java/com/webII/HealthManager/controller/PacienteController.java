@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.Binding;
@@ -30,7 +31,7 @@ public class PacienteController {
 
     // Rota para abrir o formulário de novo paciente
     @GetMapping("/novo")
-    public String form(Model model, PacienteEntity paciente) {
+    public String form( Model model ) {
         model.addAttribute("paciente", new PacienteEntity());
         return "paciente/pacienteForm";
     }
@@ -38,18 +39,19 @@ public class PacienteController {
 
     // Rota para salvar novo paciente
     @PostMapping("/salvar")
-    public String savePaciente(@ModelAttribute("paciente")  PacienteEntity paciente, Model model) {
-        try {
-            pacienteRepository.save(paciente);
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("mensagem", e.getMessage());
-            return "/paciente/erro";
+    public String savePaciente(@Valid  @ModelAttribute("paciente") PacienteEntity paciente, BindingResult result,Model model ) {
+
+        if (result.hasErrors()) {
+            return "paciente/pacienteForm";
         }
+
+        pacienteRepository.save(paciente);
+
         return "redirect:/consultorio/paciente";
     }
 
     @GetMapping("/deletar/{id}")
-    public String deletePaciente(@PathVariable Long id) {
+    public String deletePaciente( @PathVariable Long id) {
         pacienteRepository.remove(id);
         return "redirect:/";
     }

@@ -10,6 +10,7 @@ import java.util.List;
 @DiscriminatorValue("PACIENTE")
 public class PacienteEntity extends Pessoa {
 
+    @NotBlank
     private String telefone;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
