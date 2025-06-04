@@ -17,7 +17,6 @@ public class ConsultaRepository {
     @PersistenceContext
     private EntityManager em;
 
-
     public void save(ConsultaEntity consulta) {
         em.persist(consulta);
     }
@@ -25,8 +24,7 @@ public class ConsultaRepository {
     public List<ConsultaEntity> consultas() {
         return em.createQuery("SELECT c FROM ConsultaEntity c JOIN FETCH c.medico", ConsultaEntity.class).getResultList();
     }
-
-
+    
     public ConsultaEntity consulta(Long id) {
         return em.find(ConsultaEntity.class, id);
     }

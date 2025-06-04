@@ -31,7 +31,13 @@
                             <th scope="col">ID</th>
                             <th scope="col">Nome</th>
                             <th scope="col" class="d-none d-md-table-cell">Telefone</th>
-                            <th scope="col">Ações</th>
+                            <th>
+                                <a th:href="@{/consultorio/paciente/novo}"
+                                   class="btn btn-success btn-sm"
+                                   title="Novo">
+                                    <i class="bi bi-plus-circle-fill"></i>
+                                </a>
+                            </th>
                         </tr>
                         </thead>
                         <tbody class="table-group-divider">
@@ -46,11 +52,7 @@
                                        title="Consultas">
                                         <i class="bi bi-calendar-check"></i>
                                     </a>
-                                    <a th:href="@{/consultorio/paciente/novo}"
-                                       class="btn btn-success btn-sm"
-                                       title="Novo">
-                                        <i class="bi bi-plus-circle-fill"></i>
-                                    </a>
+
                                     <a th:href="@{/consultorio/paciente/editar/{id}(id=${paciente.id})}"
                                        class="btn btn-primary btn-sm"
                                        title="Editar">
