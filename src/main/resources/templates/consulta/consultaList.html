@@ -68,7 +68,9 @@
 						<tbody class="table-group-divider">
 						<tr th:each="consulta : ${consultas}">
 							<th scope="row" th:text="${consulta.idConsulta}"></th>
-							<td class="d-none d-md-table-cell" th:text="${#dates.format(consulta.data, 'dd/MM/yyyy')}"></td>
+<!--							<td class="d-none d-md-table-cell" th:text="${#dates.format(consulta.data, 'dd/MM/yyyy')}"></td>-->
+							<td th:text="${consulta.data}"></td>
+
 							<td th:text="${'R$ ' + consulta.valor}"></td>
 							<td class="d-none d-lg-table-cell">
 								<span th:if="${consulta.observacao}" th:text="${consulta.observacao}"></span>

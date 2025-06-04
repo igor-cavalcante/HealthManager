@@ -6,10 +6,12 @@ import com.webII.HealthManager.model.PacienteEntity;
 import com.webII.HealthManager.repository.ConsultaRepository;
 import com.webII.HealthManager.repository.MedicoRepository;
 import com.webII.HealthManager.repository.PacienteRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -45,7 +47,7 @@ public class ConsultaController {
     }
 
     @PostMapping("/salvar")
-    public String salvarConsulta(@ModelAttribute ConsultaEntity consulta) {
+    public String salvarConsulta(@Valid @ModelAttribute("consulta") ConsultaEntity consulta, BindingResult result,Model model) {
         // Verifica se o médico existe
         MedicoEntity medico = medicoRepository.medico(consulta.getMedico().getId());
         if (medico == null) {
@@ -63,6 +65,14 @@ public class ConsultaController {
         // Atribui os objetos recuperados à consulta
         consulta.setMedico(medico);
         consulta.setPaciente(paciente);
+
+        if(result.hasErrors()) {
+            List<MedicoEntity> medicos = medicoRepository.medicos();
+            List<PacienteEntity> pacientes = pacienteRepository.pacientes();
+            model.addAttribute("medicos", medicos);
+            model.addAttribute("pacientes", pacientes);
+            return "consulta/consultaForm";
+        }
 
         // Salva a consulta
         consultaRepository.save(consulta);

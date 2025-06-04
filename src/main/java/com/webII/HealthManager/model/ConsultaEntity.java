@@ -2,8 +2,11 @@ package com.webII.HealthManager.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "consulta")
@@ -12,8 +15,12 @@ public class ConsultaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_consulta;
-    private java.sql.Date data;
+
+    @NotNull
+    private LocalDate data;
+    @NotNull
     private Double valor;
+    @NotBlank
     private String observacao;
 
     @ManyToOne
@@ -27,8 +34,8 @@ public class ConsultaEntity implements Serializable {
     public Long getIdConsulta() { return id_consulta; }
     public void setIdConsulta(Long id_consulta) { this.id_consulta = id_consulta; }
 
-    public java.sql.Date getData() { return data; }
-    public void setData(java.sql.Date data) { this.data = data; }
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
 
     public Double getValor() { return valor; }
     public void setValor(Double valor) { this.valor = valor; }

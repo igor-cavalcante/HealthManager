@@ -39,7 +39,7 @@
 						
 						<div class="mb-3">
 							<label for="telefone" class="form-label">Telefone:</label>
-							<input type="text" class="form-control" id="telefone" name="telefone"
+							<input type="tel" class="form-control" id="telefone" name="telefone"
 							       th:field="*{telefone}" placeholder="Digite o telefone"
 							       th:classappend="${#fields.hasErrors('telefone')} ? ' is-invalid'">
 							<div class="invalid-feedback" th:errors="*{telefone}"></div>
