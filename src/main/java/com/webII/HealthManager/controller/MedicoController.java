@@ -4,9 +4,11 @@ package com.webII.HealthManager.controller;
 import com.webII.HealthManager.model.ConsultaEntity;
 import com.webII.HealthManager.model.MedicoEntity;
 import com.webII.HealthManager.repository.MedicoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +32,15 @@ public class MedicoController {
         return "medico/medicoForm";
     }
 
+    @PostMapping("/salvar")
+    public String salvarMedico(@Valid @ModelAttribute("medico") MedicoEntity medico, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            return "medico/medicoForm";
+        }
+        medicoRepository.save(medico);
+        return "redirect:/consultorio/medico";
+    }
+
     @GetMapping("/editar/{id}")
     public String editarMedico(@PathVariable Long id, Model model) {
         MedicoEntity medico = medicoRepository.medico(id);
@@ -42,12 +53,6 @@ public class MedicoController {
         }
     }
 
-
-    @PostMapping("/salvar")
-    public String salvarMedico(@ModelAttribute MedicoEntity medico) {
-        medicoRepository.save(medico);
-        return "redirect:/consultorio/medico";
-    }
 
     @PostMapping("/editar")
     public String editarMedico(@ModelAttribute MedicoEntity medico) {

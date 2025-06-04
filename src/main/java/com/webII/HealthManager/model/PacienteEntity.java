@@ -1,6 +1,7 @@
 package com.webII.HealthManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @DiscriminatorValue("PACIENTE")
 public class PacienteEntity extends Pessoa {
 
+    @NotBlank
     private String telefone;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)

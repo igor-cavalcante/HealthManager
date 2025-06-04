@@ -11,6 +11,7 @@ public class configuration implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("redirect:/consultorio/paciente");
+        registry.addViewController("/teste").setViewName("redirect:/consultorio/paciente");
     }
 
 }

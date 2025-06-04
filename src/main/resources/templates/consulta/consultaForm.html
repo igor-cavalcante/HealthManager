@@ -9,24 +9,32 @@
 <main class="d-flex flex-column min-vh-100">
 <div class="container mt-5">
     <h2 th:text="${consulta.idConsulta == null ? 'Nova Consulta' : 'Editar Consulta'}"></h2>
-    <form th:action="@{${consulta.idConsulta != null} ? '/consultorio/consulta/atualizar/' + ${consulta.idConsulta} : '/consultorio/consulta/salvar'}" method="post">
+    <form th:action="@{${consulta.idConsulta != null} ? '/consultorio/consulta/atualizar/' + ${consulta.idConsulta} : '/consultorio/consulta/salvar'}" method="post"
+    th:object="${consulta}">
 
         <!-- Esconde o ID da consulta para edição -->
-        <input type="hidden" name="id" th:value="${consulta.idConsulta}"/>
+        <input type="hidden"  th:field="*{idConsulta}"/>
 
         <div class="mb-3">
             <label for="data" class="form-label">Data:</label>
-            <input type="date" class="form-control" id="data" name="data" th:value="${#dates.format(consulta.data, 'yyyy-MM-dd')}" required>
+            <input type="date" class="form-control" id="data" name="data" th:field="*{data}"
+                   th:classappend="${#fields.hasErrors('data')} ? ' is-invalid'">
+            <div class="invalid-feedback" th:errors="*{data}"></div>
+
         </div>
 
         <div class="mb-3">
             <label for="valor" class="form-label">Valor:</label>
-            <input type="number" step="0.01" class="form-control" id="valor" name="valor" th:value="${consulta.valor}" required>
+            <input type="number" step="0.01" class="form-control" id="valor" name="valor" th:field="*{valor}" >
+            <div class="invalid-feedback" th:errors="*{valor}"></div>
         </div>
 
         <div class="mb-3">
             <label for="observacao" class="form-label">Observação:</label>
-            <textarea class="form-control" id="observacao" name="observacao" th:text="${consulta.observacao}"></textarea>
+            <textarea class="form-control" id="observacao" name="observacao" th:field="*{observacao}"
+                      th:classappend="${#fields.hasErrors('observacao')} ? ' is-invalid'"></textarea>
+
+            <div class="invalid-feedback" th:errors="*{observacao}"></div>
         </div>
 
         <div class="mb-3">
