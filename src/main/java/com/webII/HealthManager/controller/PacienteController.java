@@ -50,11 +50,7 @@ public class PacienteController {
         return "redirect:/consultorio/paciente";
     }
 
-    @GetMapping("/deletar/{id}")
-    public String deletePaciente( @PathVariable Long id) {
-        pacienteRepository.remove(id);
-        return "redirect:/";
-    }
+
 
     @GetMapping("/editar/{id}")
     public String pacienteEdit(@PathVariable Long id, Model model){
@@ -64,15 +60,19 @@ public class PacienteController {
     }
 
     @PostMapping("/editar")
-    public String saveEdit(@ModelAttribute("paciente") PacienteEntity paciente, Model model){
-        try {
-            pacienteRepository.update(paciente);
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("mensagem",e.getMessage());
-            // Tratar erro ou redirecionar para uma página de erro
-            return "/paciente/erro";
+    public String saveEdit( @Valid @ModelAttribute("paciente") PacienteEntity paciente,BindingResult result, Model model){
+        if (result.hasErrors()) {
+            return "paciente/pacienteForm";
         }
+
+            pacienteRepository.update(paciente);
         return "redirect:/consultorio/paciente";
+    }
+
+    @GetMapping("/deletar/{id}")
+    public String deletePaciente( @PathVariable Long id) {
+        pacienteRepository.remove(id);
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/consultas")

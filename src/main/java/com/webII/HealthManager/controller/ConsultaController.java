@@ -103,7 +103,15 @@ public class ConsultaController {
     }
 
     @PostMapping("/atualizar/{id}")
-    public String atualizarConsulta(@PathVariable Long id, @ModelAttribute ConsultaEntity consulta) {
+    public String atualizarConsulta(@PathVariable Long id, @Valid @ModelAttribute("consulta") ConsultaEntity consulta, BindingResult result,Model model) {
+        if(result.hasErrors()) {
+            List<MedicoEntity> medicos = medicoRepository.medicos();
+            List<PacienteEntity> pacientes = pacienteRepository.pacientes();
+            model.addAttribute("medicos", medicos);
+            model.addAttribute("pacientes", pacientes);
+            return "consulta/consultaForm";
+        }
+
         // Busca a consulta pelo id
         ConsultaEntity consultaExistente = consultaRepository.consulta(id);
 

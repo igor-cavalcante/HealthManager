@@ -25,7 +25,9 @@
 
         <div class="mb-3">
             <label for="valor" class="form-label">Valor:</label>
-            <input type="number" step="0.01" class="form-control" id="valor" name="valor" th:field="*{valor}" >
+            <input type="number" step="0.01" class="form-control" id="valor" name="valor"
+                   th:field="*{valor}"
+                   th:classappend="${#fields.hasErrors('valor')} ? ' is-invalid'">
             <div class="invalid-feedback" th:errors="*{valor}"></div>
         </div>
 

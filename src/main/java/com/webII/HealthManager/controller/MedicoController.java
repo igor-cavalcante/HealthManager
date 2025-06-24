@@ -55,13 +55,13 @@ public class MedicoController {
 
 
     @PostMapping("/editar")
-    public String editarMedico(@ModelAttribute MedicoEntity medico) {
-        try {
+    public String editarMedico(@Valid @ModelAttribute("medico") MedicoEntity medico, BindingResult result, Model model) {
+
+        if(result.hasErrors()) {
+            return "medico/medicoForm";
+        }
             medicoRepository.update(medico);
             return "redirect:/consultorio/medico";
-        } catch (IllegalArgumentException e) {
-            return "erro";
-        }
     }
 
 
