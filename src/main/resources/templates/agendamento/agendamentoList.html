@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/layout :: layout(~{::head},~{::main})}">
+<head th:replace="~{fragments/head :: head(~{::title}, ~{})}">
+  <title>Agendamentos</title>
+</head>
+<body>
+<main class="d-flex flex-column min-vh-100">
+  <div class="container-fluid py-3">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <h1 class="text-center py-2">Lista de Agendamentos</h1>
+
+        <div class="table-responsive shadow-lg p-3 mb-5 bg-white rounded">
+          <table class="table table-hover text-center">
+            <thead class="table-dark">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Data</th>
+              <th scope="col">Início</th>
+              <th scope="col">Fim</th>
+              <th scope="col">Status</th>
+              <th scope="col">Médico</th>
+              <th>	<a th:href="@{/consultorio/agendamento/nova}"
+                         class="btn btn-success btn-sm"
+                         title="Nova consulta">
+                <i class="bi bi-plus-circle-fill"></i>
+              </a></th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="agendamento : ${agendamentos}">
+              <th th:text="${agendamento.id_agendamento}"></th>
+              <td th:text="${agendamento.data_agendamento}"></td>
+              <td th:text="${agendamento.hora_inicio}"></td>
+              <td th:text="${agendamento.hora_fim}"></td>
+              <td th:text="${agendamento.status}"></td>
+              <td th:text="${agendamento.medico != null ? agendamento.medico.nome : 'N/A'}"></td>
+              <td>
+                <a th:href="@{/consultorio/agendamento/agendar/{id}(id=${agendamento.id_agendamento})}" class="btn btn-primary">
+                Agendar
+              </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

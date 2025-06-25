@@ -16,13 +16,17 @@ CREATE TABLE pessoa (
 -- Criando a tabela consulta
 CREATE TABLE consulta (
                           id_consulta SERIAL PRIMARY KEY,
+                          id_agendamento INTEGER UNIQUE,  -- Relação 1:1 com o agendamento
                           data DATE NOT NULL,
+                          hora TIME NOT NULL,             -- Adicionado para registrar o horário específico
                           valor NUMERIC(10, 2) NOT NULL,
                           observacao TEXT,
                           id_paciente INTEGER NOT NULL,
                           id_medico INTEGER NOT NULL,
+                          status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
                           FOREIGN KEY (id_paciente) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
+                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
+                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE
 );
 
 
@@ -33,9 +37,7 @@ CREATE TABLE agendamento (
                              hora_inicio TIME NOT NULL,
                              hora_fim TIME NOT NULL,
                              status VARCHAR(20) NOT NULL DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO','FEITO', 'CANCELADO')),
-                             id_consulta INTEGER,
-                             FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
-                             FOREIGN KEY (id_consulta) REFERENCES consulta(id_consulta) ON DELETE SET NULL
+                             FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
 );
 
 -- Inserindo médicos na tabela pessoa
@@ -57,35 +59,7 @@ INSERT INTO consulta (data, valor, observacao, id_paciente, id_medico) VALUES
                                                                            ('2025-05-12', 150.00, 'Consulta de emergência', 6, 3),
                                                                            ('2025-05-13', 200.00, 'Check-up anual', 4, 3);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ------------- a mudar --------------
-
-CREATE TABLE consulta (
-                          id_consulta SERIAL PRIMARY KEY,
-                          id_agendamento INTEGER UNIQUE,  -- Relação 1:1 com o agendamento
-                          data DATE NOT NULL,
-                          hora TIME NOT NULL,             -- Adicionado para registrar o horário específico
-                          valor NUMERIC(10, 2) NOT NULL,
-                          observacao TEXT,
-                          id_paciente INTEGER NOT NULL,
-                          id_medico INTEGER NOT NULL,
-                          status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
-                          FOREIGN KEY (id_paciente) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE
-);
 
 
 
