@@ -13,10 +13,20 @@ CREATE TABLE pessoa (
                         telefone VARCHAR(15)       -- Campo exclusivo para pacientes
 );
 
+CREATE TABLE disponibilidade (
+                                 id_disponibilidade SERIAL PRIMARY KEY,
+                                 id_medico INTEGER NOT NULL,
+                                 data_agendamento DATE NOT NULL,
+                                 hora_inicio TIME NOT NULL,
+                                 hora_fim TIME NOT NULL,
+                                 status VARCHAR(20) NOT NULL DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO','CANCELADO')),
+                                 FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
+);
+
 -- Criando a tabela consulta
 CREATE TABLE consulta (
                           id_consulta SERIAL PRIMARY KEY,
-                          id_agendamento INTEGER UNIQUE,  -- Relação 1:1 com o agendamento
+                          id_disponibilidade INTEGER UNIQUE,  -- Relação 1:1 com o agendamento
                           data DATE NOT NULL,
                           hora TIME NOT NULL,             -- Adicionado para registrar o horário específico
                           valor NUMERIC(10, 2) NOT NULL,
@@ -26,18 +36,7 @@ CREATE TABLE consulta (
                           status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
                           FOREIGN KEY (id_paciente) REFERENCES pessoa(id) ON DELETE CASCADE,
                           FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE
-);
-
-
-CREATE TABLE agendamento (
-                             id_agendamento SERIAL PRIMARY KEY,
-                             id_medico INTEGER NOT NULL,
-                             data_agendamento DATE NOT NULL,
-                             hora_inicio TIME NOT NULL,
-                             hora_fim TIME NOT NULL,
-                             status VARCHAR(20) NOT NULL DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO','FEITO', 'CANCELADO')),
-                             FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
+                          FOREIGN KEY (id_disponibilidade) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE
 );
 
 -- Inserindo médicos na tabela pessoa
@@ -63,17 +62,39 @@ INSERT INTO consulta (data, valor, observacao, id_paciente, id_medico) VALUES
 
 
 
---------- sujestão -----------
--- Você pode adicionar um índice composto para melhorar consultas por médico e data:
-CREATE INDEX idx_agendamento_medico_data ON agendamento(id_medico, data_agendamento);
+CREATE TABLE disponibilidade (
+                                 id_disponibilidade SERIAL PRIMARY KEY,
+                                 id_medico INTEGER NOT NULL,
+                                 data DATE NOT NULL,
+                                 hora_inicio TIME NOT NULL,
+                                 hora_fim TIME NOT NULL,
+                                 status VARCHAR(20) DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO')),
+                                 FOREIGN KEY (id_medico) REFERENCES pessoa(id)
+);
 
--- Pode ser útil adicionar uma restrição para evitar sobreposição de horários para o mesmo médico:
-CREATE EXTENSION IF NOT EXISTS btree_gist;
-ALTER TABLE agendamento ADD CONSTRAINT no_overlapping_slots
-    EXCLUDE USING gist (
-    id_medico WITH =,
-    tsrange(
-            (data_agendamento + hora_inicio)::timestamp,
-            (data_agendamento + hora_fim)::timestamp
-    ) WITH &&
-    ) WHERE (status = 'DISPONIVEL');
+-- 2. AGENDAMENTO (reserva do horário)
+CREATE TABLE agendamento (
+                             id_agendamento SERIAL PRIMARY KEY,
+                             id_disponibilidade INTEGER NOT NULL,
+                             id_paciente INTEGER NOT NULL,
+                             data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             FOREIGN KEY (id_disponibilidade) REFERENCES disponibilidade(id_disponibilidade)
+                                 ON DELETE RESTRICT,  -- Impede exclusão se houver agendamento
+                             FOREIGN KEY (id_paciente) REFERENCES pessoa(id)
+);
+
+-- 3. CONSULTA (evento médico)
+CREATE TABLE consulta (
+                          id_consulta SERIAL PRIMARY KEY,
+                          id_agendamento INTEGER UNIQUE,  -- 1:1 com agendamento (pode ser NULL para walk-ins)
+                          id_medico INTEGER NOT NULL,
+                          id_paciente INTEGER NOT NULL,
+                          data_realizacao TIMESTAMP,
+                          status VARCHAR(20) NOT NULL CHECK (
+                              status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')
+                              ),
+                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id_agendamento)
+                              ON DELETE RESTRICT,  -- Impede exclusão se houver consulta
+                          FOREIGN KEY (id_medico) REFERENCES pessoa(id),
+                          FOREIGN KEY (id_paciente) REFERENCES pessoa(id)
+);
