@@ -28,9 +28,9 @@
             </tr>
             </thead>
             <tbody class="table-group-divider">
-            <tr th:each="disponibilidade : ${disponibilidade}">
-              <th th:text="${disponibilidade.id_disponibilidade}"></th>
-              <td th:text="${disponibilidade.data_agendamento}"></td>
+            <tr th:each="agendamento : ${agendamentos}">
+              <th th:text="${agendamento.id_agendamento}"></th>
+              <td th:text="${agendamento.data_agendamento}"></td>
               <td th:text="${agendamento.hora_inicio}"></td>
               <td th:text="${agendamento.hora_fim}"></td>
               <td th:text="${agendamento.status}"></td>

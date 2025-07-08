@@ -13,15 +13,16 @@ CREATE TABLE pessoa (
                         telefone VARCHAR(15)       -- Campo exclusivo para pacientes
 );
 
-CREATE TABLE disponibilidade (
-                                 id_disponibilidade SERIAL PRIMARY KEY,
-                                 id_medico INTEGER NOT NULL,
-                                 data_agendamento DATE NOT NULL,
-                                 hora_inicio TIME NOT NULL,
-                                 hora_fim TIME NOT NULL,
-                                 status VARCHAR(20) NOT NULL DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO','CANCELADO')),
-                                 FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
+CREATE TABLE agenda (
+                        id_agenda SERIAL PRIMARY KEY,
+                        id_medico INTEGER NOT NULL,
+                        data DATE NOT NULL,
+                        hora_inicio TIME NOT NULL,
+                        hora_fim TIME NOT NULL,
+                        status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'CANCELADA')),
+                        FOREIGN KEY (id_medico) REFERENCES pessoa(id)
 );
+
 
 -- Criando a tabela consulta
 CREATE TABLE consulta (

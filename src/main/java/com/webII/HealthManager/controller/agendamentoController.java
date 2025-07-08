@@ -3,7 +3,6 @@ package com.webII.HealthManager.controller;
 import com.webII.HealthManager.model.AgendamentoEntity;
 import com.webII.HealthManager.model.ConsultaEntity;
 import com.webII.HealthManager.model.MedicoEntity;
-import com.webII.HealthManager.model.PacienteEntity;
 import com.webII.HealthManager.repository.AgendamentoRepository;
 import com.webII.HealthManager.repository.ConsultaRepository;
 import com.webII.HealthManager.repository.MedicoRepository;
@@ -49,9 +48,8 @@ public class agendamentoController {
 
         model.addAttribute("medicos", medicos);
         model.addAttribute("nomeBuscado", nome); // opcional: manter valor no input de busca
-        return "agendamento/agendamentoForm";
+        return "agendamento/disponibilidadeForm";
     }
-
 
 
     @PostMapping("/salvar")
@@ -77,6 +75,7 @@ public class agendamentoController {
     @GetMapping("/agendar/{id}")
     public String agendarConsulta(@PathVariable Long id, Model model) {
         AgendamentoEntity agendamento = agendamentoRepository.findById(id);
+
         if (agendamento == null) {
             return "redirect:/consultorio/agendamento"; // ou página de erro
         }
@@ -91,7 +90,7 @@ public class agendamentoController {
         model.addAttribute("agendamento", true);
         model.addAttribute("medicos", List.of(agendamento.getMedico())); // evita mostrar todos os médicos
 
-        return "consulta/consultaForm";
+        return "disponibilidadeForm";
     }
 
 

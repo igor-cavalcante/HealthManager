@@ -8,11 +8,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "agendamento")
+@Table(name = "agenda")
 public class AgendamentoEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_agendamento;
+    private Long id_agenda;
 
     @ManyToOne
     @JoinColumn(name = "id_medico", nullable = false)
@@ -29,14 +29,15 @@ public class AgendamentoEntity implements Serializable {
 
 
     public Long getId_agendamento() {
-        return id_agendamento;
+        return id_agenda;
     }
 
-    public void setId_agendamento(Long id_agendamento) {
-        this.id_agendamento = id_agendamento;
+    public void setId_agendamento(Long id_agenda) {
+        this.id_agenda = id_agenda;
     }
 
     public MedicoEntity getMedico() { return medico; }
+
     public void setMedico(MedicoEntity medico) { this.medico = medico; }
 
     public LocalDate getData_agendamento() {
