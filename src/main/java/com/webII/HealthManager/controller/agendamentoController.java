@@ -23,6 +23,7 @@ public class agendamentoController {
     private AgendamentoRepository agendamentoRepository;
     @Autowired
     private MedicoRepository medicoRepository;
+
     @Autowired
     private ConsultaRepository consultaRepository;
     @Autowired
