@@ -73,28 +73,27 @@
 						</thead>
 						<tbody class="table-group-divider">
 						<tr th:each="consulta : ${consultas}">
-							<th scope="row" th:text="${consulta.idConsulta}"></th>
+							<th scope="row" th:text="${consulta.id}"></th>
 <!--							<td class="d-none d-md-table-cell" th:text="${#dates.format(consulta.data, 'dd/MM/yyyy')}"></td>-->
-							<td th:text="${consulta.data}"></td>
-
+							<td th:text="${consulta.disponibilidade.data}"></td>
 							<td th:text="${'R$ ' + consulta.valor}"></td>
 							<td class="d-none d-lg-table-cell">
 								<span th:if="${consulta.observacao}" th:text="${consulta.observacao}"></span>
 								<span th:unless="${consulta.observacao}" class="text-muted">-</span>
 							</td>
-							<td th:text="${consulta.agendamento.status}">
+							<td th:text="${consulta.status}">
 							</td>
 							<td th:text="${consulta.medico.nome}"></td>
 							<td th:text="${consulta.paciente.nome}"></td>
 							<td>
 								<div class="d-flex flex-wrap justify-content-center gap-2">
 
-									<a th:href="@{/consultorio/consulta/editar/{id}(id=${consulta.idConsulta})}"
+									<a th:href="@{/consultorio/consulta/editar/{id}(id=${consulta.id})}"
 									   class="btn btn-primary btn-sm"
 									   title="Editar">
 										<i class="bi bi-pencil-square"></i>
 									</a>
-									<a th:href="@{/consultorio/consulta/deletar/{id}(id=${consulta.idConsulta})}"
+									<a th:href="@{/consultorio/consulta/deletar/{id}(id=${consulta.id})}"
 									   class="btn btn-danger btn-sm"
 									   title="Excluir">
 										<i class="bi bi-trash3"></i>

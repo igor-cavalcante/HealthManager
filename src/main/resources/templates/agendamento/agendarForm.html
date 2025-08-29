@@ -19,7 +19,7 @@
                             <span th:text="${erro}"></span>
                         </div>
 
-                        <form th:action="@{/consultorio/agendamento/salvar}" method="post">
+                        <form th:action="@{/consultorio/agendamento/salvar}" th:object="${consulta}" method="post">
 
                             <!-- Dados da Disponibilidade (somente leitura) -->
                             <div class="row mb-3">
@@ -52,16 +52,30 @@
 
                             <!-- Seleção do Paciente -->
                             <div class="mb-3">
-                                <label for="paciente" class="form-label fw-bold">Selecionar Paciente:</label>
-                                <select class="form-control" id="paciente" name="pacienteId" required
-                                        th:classappend="${#fields.hasErrors('paciente')} ? 'is-invalid' : ''">
+                                <label for="paciente" class="form-label fw-bold">Paciente:</label>
+                                <select class="form-control" id="paciente" name="pacienteId" required>
                                     <option value="">Selecione um paciente</option>
                                     <option th:each="paciente : ${pacientes}"
                                             th:value="${paciente.id}"
                                             th:text="${paciente.nome + ' - ' + paciente.telefone}">
                                     </option>
                                 </select>
-                                <div class="invalid-feedback">Selecione um paciente</div>
+                            </div>
+
+                            <!-- Valor da Consulta -->
+                            <div class="mb-3">
+                                <label for="valor" class="form-label fw-bold">Valor da Consulta:</label>
+                                <input type="number" class="form-control" id="valor"
+                                       th:field="*{valor}" step="0.01" min="0" required
+                                       placeholder="0.00">
+                            </div>
+
+                            <!-- Observações -->
+                            <div class="mb-3">
+                                <label for="observacao" class="form-label fw-bold">Observações:</label>
+                                <textarea class="form-control" id="observacao"
+                                          th:field="*{observacao}" rows="3"
+                                          placeholder="Informações relevantes sobre a consulta"></textarea>
                             </div>
 
                             <!-- Botões -->
@@ -74,39 +88,6 @@
                                 </a>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                <!-- Card com informações adicionais -->
-                <div class="card mt-4 shadow-sm">
-                    <div class="card-header bg-light">
-                        <h6 class="card-title mb-0">Informações do Horário</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <small class="text-muted">Médico:</small>
-                                <p th:text="${disponibilidade.medico.nome}"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <small class="text-muted">CRM:</small>
-                                <p th:text="${disponibilidade.medico.crm}"></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <small class="text-muted">Data e Hora:</small>
-                                <p>
-                                    <span th:text="${#temporals.format(disponibilidade.data, 'dd/MM/yyyy')}"></span>
-                                    às
-                                    <span th:text="${#temporals.format(disponibilidade.hora_inicio, 'HH:mm')}"></span>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <small class="text-muted">Duração:</small>
-                                <p th:text="${#temporals.format(disponibilidade.hora_fim, 'HH:mm')}"></p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

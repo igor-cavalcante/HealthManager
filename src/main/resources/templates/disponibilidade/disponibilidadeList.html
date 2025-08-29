@@ -39,7 +39,7 @@
                             </td>
                             <!-- Na lista de disponibilidades -->
                             <td>
-                                <a th:href="@{/consultorio/agendamento/novo}"
+                                <a th:href="@{/consultorio/agendamento/novo/{id}(id=${disponibilidade.id})}"
                                    class="btn btn-primary btn-sm">
                                     Agendar
                                 </a>
