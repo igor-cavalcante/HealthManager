@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/layout :: layout(~{::head},~{::main})}">
+<head th:replace="~{fragments/head :: head(~{::title}, ~{})}">
+    <title th:text="${disponibilidade.id == null ? 'criar' : 'Editar disponibilidade'}">disponibilidade medico</title>
+</head>
+<body>
+<main class="d-flex flex-column min-vh-100">
+    <div class="container mt-5">
+        <h2 th:text="${disponibilidade.id == null ? 'Nova Disponibilidade' : 'Editar Disponibilidade'}"></h2>
+
+        <form th:action="@{/consultorio/disponibilidade/salvar}" th:object="${disponibilidade}" method="post">
+
+            <!-- Campo Data -->
+            <div class="mb-3">
+                <label for="data" class="form-label">Data:</label>
+                <input type="date" class="form-control" id="data" th:field="*{data}">
+
+            </div>
+
+            <!-- Campo Hora Início -->
+            <div class="mb-3">
+                <label for="hora_inicio" class="form-label">Hora Início:</label>
+                <input type="time" class="form-control" id="hora_inicio" th:field="*{hora_inicio}">
+
+            </div>
+
+            <!-- Campo Hora Fim -->
+            <div class="mb-3">
+                <label for="hora_fim" class="form-label">Hora Fim:</label>
+                <input type="time" class="form-control" id="hora_fim" th:field="*{hora_fim}">
+
+            </div>
+
+            <!-- Campo Médico -->
+            <div class="mb-3">
+                <label for="medico" class="form-label">Médico:</label>
+                <select class="form-control" id="medico" name="medicoId" required>
+                    <option value="">Selecione um médico</option>
+                    <option th:each="medico : ${medicos}"
+                            th:value="${medico.id}"
+                            th:text="${medico.nome}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Botões -->
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <a th:href="@{/consultorio/disponibilidade}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>

@@ -38,6 +38,16 @@ public class ConsultaRepository {
         if (c != null) em.remove(c);
     }
 
+
+    //bucar os horarios disponiveis
+    public List<ConsultaEntity> buscarHorarioMedico(Long id){
+        return em.createQuery(
+                "SELECT c FROM ConsultaEntity c JOIN c.agendamento p WHERE p.id_medico LIKE :id",
+                ConsultaEntity.class)
+                .setParameter("id","%" +id+"%")
+                .getResultList();
+    }
+
     // Novos métodos de busca:
     public List<ConsultaEntity> buscarPorPacienteNome(String nome) {
         return em.createQuery(

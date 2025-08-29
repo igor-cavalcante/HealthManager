@@ -33,6 +33,16 @@ public class ConsultaEntity implements Serializable {
     @JoinColumn(name = "id_medico", nullable = false)
     private MedicoEntity medico;
 
+
+    @OneToOne
+    @JoinColumn(name = "id_agendamento", unique = true)
+    private AgendamentoEntity agendamento;
+
+    // Getter e Setter para agendamento
+    public AgendamentoEntity getAgendamento() { return agendamento; }
+    public void setAgendamento(AgendamentoEntity agendamento) { this.agendamento = agendamento; }
+
+
     public Long getIdConsulta() { return id_consulta; }
     public void setIdConsulta(Long id_consulta) { this.id_consulta = id_consulta; }
 
@@ -50,5 +60,8 @@ public class ConsultaEntity implements Serializable {
 
     public MedicoEntity getMedico() { return medico; }
     public void setMedico(MedicoEntity medico) { this.medico = medico; }
+
+
+
 
 }

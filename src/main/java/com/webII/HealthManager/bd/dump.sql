@@ -13,29 +13,42 @@ CREATE TABLE pessoa (
                         telefone VARCHAR(15)       -- Campo exclusivo para pacientes
 );
 
+CREATE TABLE disponibilidade (
+                                 id SERIAL PRIMARY KEY,
+                                 id_medico INTEGER NOT NULL,
+                                 data DATE NOT NULL,
+                                 hora_inicio TIME NOT NULL,
+                                 hora_fim TIME NOT NULL,
+                                 status VARCHAR(20) DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO', 'CANCELADO')),
+                                 FOREIGN KEY (id_medico) REFERENCES pessoa(id)
+);
+
+
+CREATE TABLE agenda (
+                        id_agenda SERIAL PRIMARY KEY,
+                        id_medico INTEGER NOT NULL,
+                        data DATE NOT NULL,
+                        hora_inicio TIME NOT NULL,
+                        hora_fim TIME NOT NULL,
+                        status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'CANCELADA')),
+                        FOREIGN KEY (id_medico) REFERENCES pessoa(id)
+);
+
+
 -- Criando a tabela consulta
 CREATE TABLE consulta (
                           id_consulta SERIAL PRIMARY KEY,
+                          id_disponibilidade INTEGER UNIQUE,  -- Relação 1:1 com o agendamento
                           data DATE NOT NULL,
+                          hora TIME NOT NULL,             -- Adicionado para registrar o horário específico
                           valor NUMERIC(10, 2) NOT NULL,
                           observacao TEXT,
                           id_paciente INTEGER NOT NULL,
                           id_medico INTEGER NOT NULL,
+                          status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
                           FOREIGN KEY (id_paciente) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
-);
-
-
-CREATE TABLE agendamento (
-                             id_agendamento SERIAL PRIMARY KEY,
-                             id_medico INTEGER NOT NULL,
-                             data_agendamento DATE NOT NULL,
-                             hora_inicio TIME NOT NULL,
-                             hora_fim TIME NOT NULL,
-                             status VARCHAR(20) NOT NULL DEFAULT 'DISPONIVEL' CHECK (status IN ('DISPONIVEL', 'AGENDADO','FEITO', 'CANCELADO')),
-                             id_consulta INTEGER,
-                             FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
-                             FOREIGN KEY (id_consulta) REFERENCES consulta(id_consulta) ON DELETE SET NULL
+                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
+                          FOREIGN KEY (id_disponibilidade) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE
 );
 
 -- Inserindo médicos na tabela pessoa
@@ -57,49 +70,30 @@ INSERT INTO consulta (data, valor, observacao, id_paciente, id_medico) VALUES
                                                                            ('2025-05-12', 150.00, 'Consulta de emergência', 6, 3),
                                                                            ('2025-05-13', 200.00, 'Check-up anual', 4, 3);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ------------- a mudar --------------
 
-CREATE TABLE consulta (
-                          id_consulta SERIAL PRIMARY KEY,
-                          id_agendamento INTEGER UNIQUE,  -- Relação 1:1 com o agendamento
-                          data DATE NOT NULL,
-                          hora TIME NOT NULL,             -- Adicionado para registrar o horário específico
-                          valor NUMERIC(10, 2) NOT NULL,
-                          observacao TEXT,
-                          id_paciente INTEGER NOT NULL,
-                          id_medico INTEGER NOT NULL,
-                          status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
-                          FOREIGN KEY (id_paciente) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE,
-                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id_agendamento) ON DELETE CASCADE
+
+
+-- 1. DISPONIBILIDADE (horários disponíveis do médico)
+
+-- 2. AGENDAMENTO (reserva de horário por paciente)
+CREATE TABLE agendamento (
+                             id SERIAL PRIMARY KEY,
+                             id_disponibilidade INTEGER NOT NULL UNIQUE,
+                             id_paciente INTEGER NOT NULL,
+                             data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             FOREIGN KEY (id_disponibilidade) REFERENCES disponibilidade(id) ON DELETE RESTRICT,
+                             FOREIGN KEY (id_paciente) REFERENCES pessoa(id)
 );
 
-
-
---------- sujestão -----------
--- Você pode adicionar um índice composto para melhorar consultas por médico e data:
-CREATE INDEX idx_agendamento_medico_data ON agendamento(id_medico, data_agendamento);
-
--- Pode ser útil adicionar uma restrição para evitar sobreposição de horários para o mesmo médico:
-CREATE EXTENSION IF NOT EXISTS btree_gist;
-ALTER TABLE agendamento ADD CONSTRAINT no_overlapping_slots
-    EXCLUDE USING gist (
-    id_medico WITH =,
-    tsrange(
-            (data_agendamento + hora_inicio)::timestamp,
-            (data_agendamento + hora_fim)::timestamp
-    ) WITH &&
-    ) WHERE (status = 'DISPONIVEL');
+-- 3. CONSULTA (consolidada com todas as informações)
+CREATE TABLE consulta (
+                          id SERIAL PRIMARY KEY,
+                          id_agendamento INTEGER UNIQUE,
+                          data_consulta DATE NOT NULL,
+                          hora_consulta TIME NOT NULL,
+                          valor NUMERIC(10, 2) NOT NULL,
+                          observacao TEXT,
+                          status VARCHAR(20) NOT NULL CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
+                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id) ON DELETE CASCADE
+);

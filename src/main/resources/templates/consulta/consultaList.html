@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html th:replace="~{fragments/layout :: layout(~{::head},~{::main})}">
-
 <head th:replace="~{fragments/head :: head(~{::title}, ~{})}">
 	<title>Consultas</title>
 </head>
@@ -60,6 +59,7 @@
 							<th scope="col" class="d-none d-md-table-cell">Data</th>
 							<th scope="col">Valor</th>
 							<th scope="col" class="d-none d-lg-table-cell">Observação</th>
+							<th scope="col">Status</th>
 							<th scope="col">Médico</th>
 							<th scope="col">Paciente</th>
 
@@ -68,6 +68,7 @@
 									   title="Nova consulta">
 								<i class="bi bi-plus-circle-fill"></i>
 							</a></th>
+							<th></th>
 						</tr>
 						</thead>
 						<tbody class="table-group-divider">
@@ -80,6 +81,8 @@
 							<td class="d-none d-lg-table-cell">
 								<span th:if="${consulta.observacao}" th:text="${consulta.observacao}"></span>
 								<span th:unless="${consulta.observacao}" class="text-muted">-</span>
+							</td>
+							<td th:text="${consulta.agendamento.status}">
 							</td>
 							<td th:text="${consulta.medico.nome}"></td>
 							<td th:text="${consulta.paciente.nome}"></td>

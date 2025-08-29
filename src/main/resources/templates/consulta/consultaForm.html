@@ -12,15 +12,19 @@
     <form th:action="@{${consulta.idConsulta != null} ? '/consultorio/consulta/atualizar/' + ${consulta.idConsulta} : '/consultorio/consulta/salvar'}" method="post"
     th:object="${consulta}">
 
+        <!-- Campo oculto para o ID do agendamento -->
+        <input type="hidden" th:field="*{agendamento.id_agendamento}" th:if="${consulta.agendamento != null}">
+
         <!-- Esconde o ID da consulta para edição -->
         <input type="hidden"  th:field="*{idConsulta}"/>
 
         <div class="mb-3">
             <label for="data" class="form-label">Data:</label>
-            <input type="date" class="form-control" id="data" name="data" th:field="*{data}"
-                   th:classappend="${#fields.hasErrors('data')} ? ' is-invalid'">
+            <input type="date" class="form-control" id="data" name="data"
+                   th:field="*{data}"
+                   th:classappend="${#fields.hasErrors('data')} ? ' is-invalid'"
+                   th:readonly="${agendamento}">
             <div class="invalid-feedback" th:errors="*{data}"></div>
-
         </div>
 
         <div class="mb-3">
@@ -41,17 +45,22 @@
 
         <div class="mb-3">
             <label for="medico" class="form-label">Médico:</label>
-            <select class="form-control" id="medico" name="medico.id" required>
+            <select class="form-control" id="medico" name="medico.id"
+                    th:disabled="${agendamento}">
+                <option value=""></option>
                 <option th:each="medico : ${medicos}"
                         th:value="${medico.id}"
                         th:text="${medico.nome}"
                         th:selected="${consulta.medico != null and medico.id == consulta.medico.id}"></option>
             </select>
         </div>
+        <!-- Se for um agendamento, mantém o médico mesmo com o select desabilitado -->
+        <input type="hidden" name="medico.id" th:value="${consulta.medico.id}" th:if="${agendamento}">
 
         <div class="mb-3">
             <label for="paciente" class="form-label">Paciente:</label>
-            <select class="form-control" id="paciente" name="paciente.id" required>
+            <select class="form-control" id="paciente" name="paciente.id" >
+                <option value=""></option>
                 <option th:each="paciente : ${pacientes}"
                         th:value="${paciente.id}"
                         th:text="${paciente.nome}"

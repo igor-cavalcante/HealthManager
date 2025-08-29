@@ -1,8 +1,10 @@
 package com.webII.HealthManager.controller;
 
+import com.webII.HealthManager.model.AgendamentoEntity;
 import com.webII.HealthManager.model.ConsultaEntity;
 import com.webII.HealthManager.model.MedicoEntity;
 import com.webII.HealthManager.model.PacienteEntity;
+import com.webII.HealthManager.repository.AgendamentoRepository;
 import com.webII.HealthManager.repository.ConsultaRepository;
 import com.webII.HealthManager.repository.MedicoRepository;
 import com.webII.HealthManager.repository.PacienteRepository;
@@ -28,6 +30,8 @@ public class ConsultaController {
     private MedicoRepository medicoRepository;
     @Autowired
     private PacienteRepository pacienteRepository;
+    @Autowired
+    private AgendamentoRepository AgendamentoRepository;
 
     @GetMapping
     public String listarConsultas(Model model) {
@@ -49,11 +53,13 @@ public class ConsultaController {
     @PostMapping("/salvar")
     public String salvarConsulta(@Valid @ModelAttribute("consulta") ConsultaEntity consulta, BindingResult result,Model model) {
         // Verifica se o médico existe
+
         MedicoEntity medico = medicoRepository.medico(consulta.getMedico().getId());
         if (medico == null) {
             // Retorna um erro ou redireciona caso o médico não seja encontrado
             return "redirect:/erro?message=Médico não encontrado";
-        }
+       }
+        consulta.setMedico(medico);
 
         // Verifica se o paciente existe
         PacienteEntity paciente = pacienteRepository.paciente(consulta.getPaciente().getId());
@@ -62,11 +68,19 @@ public class ConsultaController {
             return "redirect:/erro?message=Paciente não encontrado";
         }
 
-        // Atribui os objetos recuperados à consulta
-        consulta.setMedico(medico);
-        consulta.setPaciente(paciente);
+        if (consulta.getAgendamento() != null && consulta.getAgendamento().getId_agendamento() != null) {
+            AgendamentoEntity agendamento = AgendamentoRepository.findById(consulta.getAgendamento().getId_agendamento());
+            if (agendamento == null) {
+                return "redirect:/erro?message=Agendamento não encontrado";
+            }
+            consulta.setAgendamento(agendamento);
 
-        if(result.hasErrors()) {
+            // Você pode querer atualizar o status do agendamento para "ocupado" ou similar
+            agendamento.setStatus("AGENDADO"); // ou outro status que você preferir
+            AgendamentoRepository.salvar(agendamento);
+        }
+
+        if (result.hasErrors()) {
             List<MedicoEntity> medicos = medicoRepository.medicos();
             List<PacienteEntity> pacientes = pacienteRepository.pacientes();
             model.addAttribute("medicos", medicos);
@@ -74,10 +88,7 @@ public class ConsultaController {
             return "consulta/consultaForm";
         }
 
-        // Salva a consulta
         consultaRepository.save(consulta);
-
-        // Redireciona para a lista de consultas após o salvamento
         return "redirect:/consultorio/consulta";
     }
 
