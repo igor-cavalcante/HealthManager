@@ -5,73 +5,179 @@
     <title>Consultas</title>
 </head>
 <body>
+<style>
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
 
-<main class="d-flex flex-column min-vh-100">
-<div class="container mt-5">
-    <h2 th:text="${consulta.idConsulta == null ? 'Nova Consulta' : 'Editar Consulta'}"></h2>
-    <form th:action="@{${consulta.idConsulta != null} ? '/consultorio/consulta/atualizar/' + ${consulta.idConsulta} : '/consultorio/consulta/salvar'}" method="post"
-    th:object="${consulta}">
+    .form-check-input:checked + .form-check-label {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+</style>
 
-        <!-- Campo oculto para o ID do agendamento -->
-        <input type="hidden" th:field="*{agendamento.id_agendamento}" th:if="${consulta.agendamento != null}">
+    <main class="d-flex flex-column min-vh-100">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="card-title mb-0">Nova Consulta</h4>
+                        </div>
+                        <div class="card-body">
 
-        <!-- Esconde o ID da consulta para edição -->
-        <input type="hidden"  th:field="*{idConsulta}"/>
+                            <div th:if="${erro}" class="alert alert-danger" role="alert">
+                                <span th:text="${erro}"></span>
+                            </div>
 
-        <div class="mb-3">
-            <label for="data" class="form-label">Data:</label>
-            <input type="date" class="form-control" id="data" name="data"
-                   th:field="*{data}"
-                   th:classappend="${#fields.hasErrors('data')} ? ' is-invalid'"
-                   th:readonly="${agendamento}">
-            <div class="invalid-feedback" th:errors="*{data}"></div>
+                            <form th:action="@{/consultorio/consulta/salvar}" th:object="${consulta}" method="post">
+
+                                <!-- Seleção do Médico -->
+                                <div class="mb-3">
+                                    <label for="medico" class="form-label fw-bold">Médico:</label>
+
+                                    <select class="form-control" id="medico" name="medicoId" required
+                                            onchange="carregarHorarios(this.value)">
+                                        <option value="">Selecione um médico</option>
+                                        <option th:each="medico : ${medicos}"
+                                                th:value="${medico.id}"
+                                                th:text="${medico.nome + ' - CRM: ' + medico.crm}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Container dos Horários -->
+                                <div class="mb-3" id="horarios-container" style="display: none;">
+                                    <label class="form-label fw-bold">Horários Disponíveis:</label>
+                                    <div id="horarios-disponiveis" class="border p-3 rounded bg-light">
+                                        <p class="text-muted" id="mensagem-horarios">
+                                            Selecione um médico para ver os horários disponíveis
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="disponibilidadeId" name="disponibilidadeId">
+
+                                <!-- Demais campos... -->
+                                <div class="mb-3">
+                                    <label for="paciente" class="form-label fw-bold">Paciente:</label>
+                                    <select class="form-control" id="paciente" name="paciente.id" required>
+                                        <option value="">Selecione um paciente</option>
+                                        <option th:each="paciente : ${pacientes}"
+                                                th:value="${paciente.id}"
+                                                th:text="${paciente.nome + ' - Tel: ' + paciente.telefone}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="valor" class="form-label fw-bold">Valor da Consulta:</label>
+                                    <input type="number" class="form-control" id="valor"
+                                           th:field="*{valor}" step="0.01" min="0" required
+                                           placeholder="0.00">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="observacao" class="form-label fw-bold">Observações:</label>
+                                    <textarea class="form-control" id="observacao"
+                                              th:field="*{observacao}" rows="3"
+                                              placeholder="Informações relevantes sobre a consulta"></textarea>
+                                </div>
+
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="submit" class="btn btn-success me-md-2">
+                                        Agendar Consulta
+                                    </button>
+                                    <a th:href="@{/consultorio/consulta}" class="btn btn-secondary">
+                                        Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="valor" class="form-label">Valor:</label>
-            <input type="number" step="0.01" class="form-control" id="valor" name="valor"
-                   th:field="*{valor}"
-                   th:classappend="${#fields.hasErrors('valor')} ? ' is-invalid'">
-            <div class="invalid-feedback" th:errors="*{valor}"></div>
-        </div>
+        <!-- JavaScript PURO (sem jQuery) -->
+        <script>
+            function carregarHorarios(medicoId) {
+                console.log('Médico selecionado:', medicoId);
 
-        <div class="mb-3">
-            <label for="observacao" class="form-label">Observação:</label>
-            <textarea class="form-control" id="observacao" name="observacao" th:field="*{observacao}"
-                      th:classappend="${#fields.hasErrors('observacao')} ? ' is-invalid'"></textarea>
+                const horariosContainer = document.getElementById('horarios-container');
+                const horariosDiv = document.getElementById('horarios-disponiveis');
+                const mensagem = document.getElementById('mensagem-horarios');
 
-            <div class="invalid-feedback" th:errors="*{observacao}"></div>
-        </div>
+                if (!medicoId) {
+                    horariosContainer.style.display = 'none';
+                    mensagem.textContent = 'Selecione um médico para ver os horários disponíveis';
+                    return;
+                }
 
-        <div class="mb-3">
-            <label for="medico" class="form-label">Médico:</label>
-            <select class="form-control" id="medico" name="medico.id"
-                    th:disabled="${agendamento}">
-                <option value=""></option>
-                <option th:each="medico : ${medicos}"
-                        th:value="${medico.id}"
-                        th:text="${medico.nome}"
-                        th:selected="${consulta.medico != null and medico.id == consulta.medico.id}"></option>
-            </select>
-        </div>
-        <!-- Se for um agendamento, mantém o médico mesmo com o select desabilitado -->
-        <input type="hidden" name="medico.id" th:value="${consulta.medico.id}" th:if="${agendamento}">
+                // Mostrar container e loading
+                horariosContainer.style.display = 'block';
+                mensagem.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm" role="status"></div> Carregando horários...</div>';
 
-        <div class="mb-3">
-            <label for="paciente" class="form-label">Paciente:</label>
-            <select class="form-control" id="paciente" name="paciente.id" >
-                <option value=""></option>
-                <option th:each="paciente : ${pacientes}"
-                        th:value="${paciente.id}"
-                        th:text="${paciente.nome}"
-                        th:selected="${consulta.paciente != null and paciente.id == consulta.paciente.id}"></option>
-            </select>
-        </div>
+                // Fazer requisição FETCH
+                fetch('/consultorio/consulta/horarios-disponiveis/' + medicoId)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na requisição: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(horarios => {
+                        console.log('Horários recebidos:', horarios);
 
-        <button type="submit" class="btn btn-success">Salvar</button>
-        <a th:href="@{/consultorio/consulta}" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
+                        if (horarios.length === 0) {
+                            horariosDiv.innerHTML = '<p class="text-warning">Nenhum horário disponível para este médico.</p>';
+                            return;
+                        }
+
+                        let html = '<div class="list-group">';
+                        horarios.forEach(horario => {
+                            // Formatando a data para PT-BR
+                            const dataParts = horario.data.split('-');
+                            const dataFormatada = `${dataParts[2]}/${dataParts[1]}/${dataParts[0]}`;
+
+                            html += `
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="disponibilidadeRadio"
+                                               value="${horario.id}" id="horario-${horario.id}" required
+                                               onchange="document.getElementById('disponibilidadeId').value = this.value">
+                                        <label class="form-check-label" for="horario-${horario.id}">
+                                            <strong>${dataFormatada}</strong> -
+                                            ${horario.hora_inicio} às ${horario.hora_fim}
+                                        </label>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+
+                        horariosDiv.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar horários:', error);
+                        horariosDiv.innerHTML = '<p class="text-danger">Erro ao carregar horários. Verifique o console.</p>';
+                    });
+            }
+
+            // Debug: verificar se o script carregou
+            console.log('Script de horários carregado com sucesso!');
+
+            // Adicionar event listener para debug
+            document.addEventListener('DOMContentLoaded', function() {
+                const selectMedico = document.getElementById('medico');
+                if (selectMedico) {
+                    selectMedico.addEventListener('change', function() {
+                        console.log('Médico alterado para:', this.value);
+                    });
+                }
+            });
+        </script>
 </main>
 
 </body>

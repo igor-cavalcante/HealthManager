@@ -1,13 +1,7 @@
 package com.webII.HealthManager.controller;
 
-import com.webII.HealthManager.model.AgendamentoEntity;
-import com.webII.HealthManager.model.ConsultaEntity;
-import com.webII.HealthManager.model.MedicoEntity;
-import com.webII.HealthManager.model.PacienteEntity;
-import com.webII.HealthManager.repository.AgendamentoRepository;
-import com.webII.HealthManager.repository.ConsultaRepository;
-import com.webII.HealthManager.repository.MedicoRepository;
-import com.webII.HealthManager.repository.PacienteRepository;
+import com.webII.HealthManager.model.*;
+import com.webII.HealthManager.repository.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -25,21 +20,23 @@ import java.util.List;
 public class ConsultaController {
 
     @Autowired
-    private ConsultaRepository consultaRepository;
-    @Autowired
     private MedicoRepository medicoRepository;
+
+    @Autowired
+    private DisponibilidadeRepository disponibilidadeRepository;
+
     @Autowired
     private PacienteRepository pacienteRepository;
+
     @Autowired
-    private AgendamentoRepository AgendamentoRepository;
+    private ConsultaRepository consultaRepository;
+
 
     @GetMapping
     public String listarConsultas(Model model) {
         model.addAttribute("consultas", consultaRepository.consultas());
         return "consulta/consultaList";
     }
-
-
 
     @GetMapping("/nova")
     public String novaConsulta(Model model) {
@@ -51,6 +48,77 @@ public class ConsultaController {
         model.addAttribute("pacientes", pacientes);
         return "consulta/consultaForm"; // Nome do template Thymeleaf
     }
+
+    @GetMapping("/horarios-disponiveis/{medicoId}")
+    @ResponseBody
+    public List<Map<String, Object>> getHorariosDisponiveis(@PathVariable Long medicoId) {
+        MedicoEntity medico = medicoRepository.medico(medicoId);
+        if (medico == null) {
+            return Collections.emptyList();
+        }
+
+        List<DisponibilidadeEntity> disponibilidades = disponibilidadeRepository.findByMedicoAndStatus(medico, "DISPONIVEL");
+
+        // Converter para formato mais simples para o JSON
+        return disponibilidades.stream().map(disp -> {
+            Map<String, Object> horario = new HashMap<>();
+            horario.put("id", disp.getId());
+            horario.put("data", disp.getData().toString()); // Formato ISO: yyyy-MM-dd
+            horario.put("hora_inicio", disp.getHora_inicio().toString());
+            horario.put("hora_fim", disp.getHora_fim().toString());
+            return horario;
+        }).collect(Collectors.toList());
+    }
+
+    // Salvar consulta
+    @PostMapping("/salvar")
+    public String salvarConsulta(@ModelAttribute ConsultaEntity consulta,
+                                 @RequestParam("disponibilidadeId") Long disponibilidadeId,
+                                 @RequestParam("paciente.id") Long pacienteId,
+                                 Model model) {
+
+        try {
+            // 1. Buscar a disponibilidade
+            DisponibilidadeEntity disponibilidade = disponibilidadeRepository.findById(disponibilidadeId);
+            if (disponibilidade == null || !"DISPONIVEL".equals(disponibilidade.getStatus())) {
+                model.addAttribute("erro", "Horário não disponível");
+                model.addAttribute("medicos", medicoRepository.medicos());
+                model.addAttribute("pacientes", pacienteRepository.pacientes());
+                return "consulta/consultaForm";
+            }
+
+            // 2. Buscar o paciente
+            PacienteEntity paciente = pacienteRepository.paciente(pacienteId);
+            if (paciente == null) {
+                model.addAttribute("erro", "Paciente não encontrado");
+                model.addAttribute("medicos", medicoRepository.medicos());
+                model.addAttribute("pacientes", pacienteRepository.pacientes());
+                return "consulta/consultaForm";
+            }
+
+            // 3. Configurar a consulta
+            consulta.setDisponibilidade(disponibilidade);
+            consulta.setMedico(disponibilidade.getMedico());
+            consulta.setPaciente(paciente);
+            consulta.setStatus("AGENDADA");
+
+            // 4. Salvar consulta
+            consultaRepository.save(consulta);
+
+            // 5. Atualizar status da disponibilidade
+            disponibilidade.setStatus("AGENDADO");
+            disponibilidadeRepository.save(disponibilidade);
+
+            return "redirect:/consultorio/consulta";
+
+        } catch (Exception e) {
+            model.addAttribute("erro", "Erro ao salvar consulta: " + e.getMessage());
+            model.addAttribute("medicos", medicoRepository.medicos());
+            model.addAttribute("pacientes", pacienteRepository.pacientes());
+            return "consulta/consultaForm";
+        }
+    }
+
 
 //    @PostMapping("/salvar")
 //    public String salvarConsulta(@Valid @ModelAttribute("consulta") ConsultaEntity consulta, BindingResult result,Model model) {
