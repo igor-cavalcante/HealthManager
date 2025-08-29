@@ -22,6 +22,11 @@ public class DisponibilidadeRepository {
         return entityManager.createQuery("SELECT d FROM DisponibilidadeEntity d WHERE d.status = 'DISPONIVEL'", DisponibilidadeEntity.class).getResultList();
     }
 
+
+    public List<DisponibilidadeEntity> findDisponibilidadeAgendadas() {
+        return entityManager.createQuery("SELECT d FROM DisponibilidadeEntity d WHERE d.status = 'AGENDADO'", DisponibilidadeEntity.class).getResultList();
+    }
+
     public DisponibilidadeEntity findById(Long id) {
         return entityManager.find(DisponibilidadeEntity.class, id);
     }

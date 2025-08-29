@@ -12,7 +12,6 @@ CREATE TABLE pessoa (
                         crm VARCHAR(20) UNIQUE,    -- Campo exclusivo para médicos
                         telefone VARCHAR(15)       -- Campo exclusivo para pacientes
 );
-
 CREATE TABLE disponibilidade (
                                  id SERIAL PRIMARY KEY,
                                  id_medico INTEGER NOT NULL,
@@ -23,15 +22,18 @@ CREATE TABLE disponibilidade (
                                  FOREIGN KEY (id_medico) REFERENCES pessoa(id)
 );
 
-
-CREATE TABLE agenda (
-                        id_agenda SERIAL PRIMARY KEY,
-                        id_medico INTEGER NOT NULL,
-                        data DATE NOT NULL,
-                        hora_inicio TIME NOT NULL,
-                        hora_fim TIME NOT NULL,
-                        status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'CANCELADA')),
-                        FOREIGN KEY (id_medico) REFERENCES pessoa(id)
+-- nova tabela oonsulta
+CREATE TABLE consulta (
+                          id SERIAL PRIMARY KEY,
+                          disponibilidade_id INTEGER NOT NULL UNIQUE,
+                          id_paciente INTEGER NOT NULL,
+                          id_medico INTEGER NOT NULL,
+                          valor NUMERIC(10, 2),
+                          observacao TEXT,
+                          status VARCHAR(20) NOT NULL DEFAULT 'AGENDADA' CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
+                          FOREIGN KEY (disponibilidade_id) REFERENCES disponibilidade(id) ON DELETE RESTRICT,
+                          FOREIGN KEY (id_paciente) REFERENCES pessoa(id) ON DELETE CASCADE,
+                          FOREIGN KEY (id_medico) REFERENCES pessoa(id) ON DELETE CASCADE
 );
 
 
@@ -70,30 +72,22 @@ INSERT INTO consulta (data, valor, observacao, id_paciente, id_medico) VALUES
                                                                            ('2025-05-12', 150.00, 'Consulta de emergência', 6, 3),
                                                                            ('2025-05-13', 200.00, 'Check-up anual', 4, 3);
 
-------------- a mudar --------------
+------------- a inserir --------------
 
 
 
--- 1. DISPONIBILIDADE (horários disponíveis do médico)
+INSERT INTO disponibilidade (id, id_medico,data, hora_inicio,hora_fim) VALUES
+                                                                           (101, 1, '09:00:00', '09:30:00'),
+                                                                           (102, 1, '09:30:00', '10:00:00'),
+                                                                           (103, 1, '10:00:00', '10:30:00'),
+                                                                           (104, 1, '10:30:00', '11:00:00');
 
--- 2. AGENDAMENTO (reserva de horário por paciente)
-CREATE TABLE agendamento (
-                             id SERIAL PRIMARY KEY,
-                             id_disponibilidade INTEGER NOT NULL UNIQUE,
-                             id_paciente INTEGER NOT NULL,
-                             data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                             FOREIGN KEY (id_disponibilidade) REFERENCES disponibilidade(id) ON DELETE RESTRICT,
-                             FOREIGN KEY (id_paciente) REFERENCES pessoa(id)
-);
+INSERT INTO disponibilidade (id, id_medico, data, hora_inicio, hora_fim, status) VALUES
+                                                                                     (101, 1, '2025-09-02', '09:00:00', '09:30:00', 'AGENDADO'),
+                                                                                     (103, 1, '2025-09-02', '10:00:00', '10:30:00', 'AGENDADO');
 
--- 3. CONSULTA (consolidada com todas as informações)
-CREATE TABLE consulta (
-                          id SERIAL PRIMARY KEY,
-                          id_agendamento INTEGER UNIQUE,
-                          data_consulta DATE NOT NULL,
-                          hora_consulta TIME NOT NULL,
-                          valor NUMERIC(10, 2) NOT NULL,
-                          observacao TEXT,
-                          status VARCHAR(20) NOT NULL CHECK (status IN ('AGENDADA', 'REALIZADA', 'CANCELADA', 'FALTA')),
-                          FOREIGN KEY (id_agendamento) REFERENCES agendamento(id) ON DELETE CASCADE
-);
+INSERT INTO disponibilidade (id, id_medico, data, hora_inicio, hora_fim, status) VALUES
+    (203, 2, '2025-09-04', '15:30:00', '16:15:00', 'AGENDADO');
+
+INSERT INTO disponibilidade (id, id_medico, data, hora_inicio, hora_fim, status) VALUES
+    (204, 2, '2025-09-04', '15:30:00', '16:15:01', 'DISPONIVEL');

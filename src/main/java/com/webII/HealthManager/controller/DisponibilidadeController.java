@@ -32,6 +32,7 @@ public class DisponibilidadeController {
         return "disponibilidade/disponibilidadeList"; // Corrigido o nome do template
     }
 
+
     @GetMapping("/novo")
     public String novoAgendamento(@RequestParam(name = "nome", required = false) String nome, Model model) {
         model.addAttribute("disponibilidade", new DisponibilidadeEntity());

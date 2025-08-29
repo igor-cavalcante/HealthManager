@@ -39,6 +39,8 @@ public class ConsultaController {
         return "consulta/consultaList";
     }
 
+
+
     @GetMapping("/nova")
     public String novaConsulta(Model model) {
         ConsultaEntity consulta = new ConsultaEntity();
