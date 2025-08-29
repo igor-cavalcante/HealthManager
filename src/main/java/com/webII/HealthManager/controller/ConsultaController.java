@@ -146,7 +146,7 @@ public class ConsultaController {
         }
 
         // Atribui os objetos recuperados à consulta existente
-        consultaExistente.setData(consulta.getData());
+        //consultaExistente.setData(consulta.getData());
         consultaExistente.setValor(consulta.getValor());
         consultaExistente.setObservacao(consulta.getObservacao());
         consultaExistente.setMedico(medico);

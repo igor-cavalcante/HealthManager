@@ -15,15 +15,11 @@ public class ConsultaEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_consulta;
+    private Long id;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data;
-    @NotNull
-    private Double valor;
-    @NotBlank
-    private String observacao;
+    @OneToOne
+    @JoinColumn(name = "disponibilidade_id", nullable = false, unique = true)
+    private DisponibilidadeEntity disponibilidade;
 
     @ManyToOne
     @JoinColumn(name = "id_paciente", nullable = false)
@@ -33,21 +29,12 @@ public class ConsultaEntity implements Serializable {
     @JoinColumn(name = "id_medico", nullable = false)
     private MedicoEntity medico;
 
+    private Double valor;
 
-    @OneToOne
-    @JoinColumn(name = "id_agendamento", unique = true)
-    private AgendamentoEntity agendamento;
+    private String observacao;
 
-    // Getter e Setter para agendamento
-    public AgendamentoEntity getAgendamento() { return agendamento; }
-    public void setAgendamento(AgendamentoEntity agendamento) { this.agendamento = agendamento; }
+    private  String Status;
 
-
-    public Long getIdConsulta() { return id_consulta; }
-    public void setIdConsulta(Long id_consulta) { this.id_consulta = id_consulta; }
-
-    public LocalDate getData() { return data; }
-    public void setData(LocalDate data) { this.data = data; }
 
     public Double getValor() { return valor; }
     public void setValor(Double valor) { this.valor = valor; }
@@ -61,7 +48,27 @@ public class ConsultaEntity implements Serializable {
     public MedicoEntity getMedico() { return medico; }
     public void setMedico(MedicoEntity medico) { this.medico = medico; }
 
+    public DisponibilidadeEntity getDisponibilidade() {
+        return disponibilidade;
+    }
 
+    public void setDisponibilidade(DisponibilidadeEntity disponibilidade) {
+        this.disponibilidade = disponibilidade;
+    }
 
+    public String getStatus() {
+        return Status;
+    }
 
+    public void setStatus(String status) {
+        Status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

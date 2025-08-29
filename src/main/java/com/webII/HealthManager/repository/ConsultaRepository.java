@@ -18,7 +18,11 @@ public class ConsultaRepository {
     private EntityManager em;
 
     public void save(ConsultaEntity consulta) {
-        em.persist(consulta);
+        if (consulta.getId() == null) {
+            em.persist(consulta);
+        } else {
+            em.merge(consulta);
+        }
     }
 
     public List<ConsultaEntity> consultas() {
