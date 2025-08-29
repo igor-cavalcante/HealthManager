@@ -15,11 +15,12 @@
             <thead class="table-dark">
             <tr>
               <th scope="col">ID</th>
-              <th scope="col">Data</th>
+              <th scope="col">Data Consulta</th>
               <th scope="col">Início</th>
               <th scope="col">Fim</th>
               <th scope="col">Status</th>
               <th scope="col">Médico</th>
+              <th scope="col">Data de criação</th>
               <th>	<a th:href="@{/consultorio/agendamento/nova}"
                          class="btn btn-success btn-sm"
                          title="Nova consulta">
@@ -30,7 +31,7 @@
             <tbody class="table-group-divider">
             <tr th:each="agendamento : ${agendamentos}">
               <th th:text="${agendamento.id_agendamento}"></th>
-              <td th:text="${agendamento.data_agendamento}"></td>
+              <th th:text="${agendamento.disponibilidade.data}"></th>
               <td th:text="${agendamento.hora_inicio}"></td>
               <td th:text="${agendamento.hora_fim}"></td>
               <td th:text="${agendamento.status}"></td>

@@ -5,71 +5,57 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "agenda")
+@Table(name = "agendamento")
 public class AgendamentoEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_agenda;
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "id_disponibilidade", nullable = false, unique = true)
+    private DisponibilidadeEntity disponibilidade;
 
     @ManyToOne
-    @JoinColumn(name = "id_medico", nullable = false)
-    private MedicoEntity medico;
+    @JoinColumn(name = "id_paciente", nullable = false)
+    private PacienteEntity paciente;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate data_agendamento;
+    @Column(name = "data_criacao", nullable = false)
+    private LocalDateTime dataCriacao;
 
-    private LocalTime hora_inicio;
-
-    private LocalTime hora_fim;
-
-    private String status;
-
-
-    public Long getId_agendamento() {
-        return id_agenda;
+    public Long getId() {
+        return id;
     }
 
-    public void setId_agendamento(Long id_agenda) {
-        this.id_agenda = id_agenda;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public MedicoEntity getMedico() { return medico; }
-
-    public void setMedico(MedicoEntity medico) { this.medico = medico; }
-
-    public LocalDate getData_agendamento() {
-        return data_agendamento;
+    public DisponibilidadeEntity getDisponibilidade() {
+        return disponibilidade;
     }
 
-    public void setData_agendamento(LocalDate data_agendamento) {
-        this.data_agendamento = data_agendamento;
+    public void setDisponibilidade(DisponibilidadeEntity disponibilidade) {
+        this.disponibilidade = disponibilidade;
     }
 
-    public LocalTime getHora_inicio() {
-        return hora_inicio;
+    public PacienteEntity getPaciente() {
+        return paciente;
     }
 
-    public void setHora_inicio(LocalTime hora_inicio) {
-        this.hora_inicio = hora_inicio;
+    public void setPaciente(PacienteEntity paciente) {
+        this.paciente = paciente;
     }
 
-    public LocalTime getHora_fim() {
-        return hora_fim;
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setHora_fim(LocalTime hora_fim) {
-        this.hora_fim = hora_fim;
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
 }
