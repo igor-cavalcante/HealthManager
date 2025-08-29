@@ -39,6 +39,8 @@ public class ConsultaController {
         return "consulta/consultaList";
     }
 
+
+
     @GetMapping("/nova")
     public String novaConsulta(Model model) {
         ConsultaEntity consulta = new ConsultaEntity();
@@ -50,47 +52,47 @@ public class ConsultaController {
         return "consulta/consultaForm"; // Nome do template Thymeleaf
     }
 
-    @PostMapping("/salvar")
-    public String salvarConsulta(@Valid @ModelAttribute("consulta") ConsultaEntity consulta, BindingResult result,Model model) {
-        // Verifica se o médico existe
-
-        MedicoEntity medico = medicoRepository.medico(consulta.getMedico().getId());
-        if (medico == null) {
-            // Retorna um erro ou redireciona caso o médico não seja encontrado
-            return "redirect:/erro?message=Médico não encontrado";
-       }
-        consulta.setMedico(medico);
-
-        // Verifica se o paciente existe
-        PacienteEntity paciente = pacienteRepository.paciente(consulta.getPaciente().getId());
-        if (paciente == null) {
-            // Retorna um erro ou redireciona caso o paciente não seja encontrado
-            return "redirect:/erro?message=Paciente não encontrado";
-        }
-
-        if (consulta.getAgendamento() != null && consulta.getAgendamento().getId_agendamento() != null) {
-            AgendamentoEntity agendamento = AgendamentoRepository.findById(consulta.getAgendamento().getId_agendamento());
-            if (agendamento == null) {
-                return "redirect:/erro?message=Agendamento não encontrado";
-            }
-            consulta.setAgendamento(agendamento);
-
-            // Você pode querer atualizar o status do agendamento para "ocupado" ou similar
-            agendamento.setStatus("AGENDADO"); // ou outro status que você preferir
-            AgendamentoRepository.salvar(agendamento);
-        }
-
-        if (result.hasErrors()) {
-            List<MedicoEntity> medicos = medicoRepository.medicos();
-            List<PacienteEntity> pacientes = pacienteRepository.pacientes();
-            model.addAttribute("medicos", medicos);
-            model.addAttribute("pacientes", pacientes);
-            return "consulta/consultaForm";
-        }
-
-        consultaRepository.save(consulta);
-        return "redirect:/consultorio/consulta";
-    }
+//    @PostMapping("/salvar")
+//    public String salvarConsulta(@Valid @ModelAttribute("consulta") ConsultaEntity consulta, BindingResult result,Model model) {
+//        // Verifica se o médico existe
+//
+//        MedicoEntity medico = medicoRepository.medico(consulta.getMedico().getId());
+//        if (medico == null) {
+//            // Retorna um erro ou redireciona caso o médico não seja encontrado
+//            return "redirect:/erro?message=Médico não encontrado";
+//       }
+//        consulta.setMedico(medico);
+//
+//        // Verifica se o paciente existe
+//        PacienteEntity paciente = pacienteRepository.paciente(consulta.getPaciente().getId());
+//        if (paciente == null) {
+//            // Retorna um erro ou redireciona caso o paciente não seja encontrado
+//            return "redirect:/erro?message=Paciente não encontrado";
+//        }
+//
+//        if (consulta.getAgendamento() != null && consulta.getAgendamento().getId_agendamento() != null) {
+//            AgendamentoEntity agendamento = AgendamentoRepository.findById(consulta.getAgendamento().getId_agendamento());
+//            if (agendamento == null) {
+//                return "redirect:/erro?message=Agendamento não encontrado";
+//            }
+//            consulta.setAgendamento(agendamento);
+//
+//            // Você pode querer atualizar o status do agendamento para "ocupado" ou similar
+//            agendamento.setStatus("AGENDADO"); // ou outro status que você preferir
+//            AgendamentoRepository.salvar(agendamento);
+//        }
+//
+//        if (result.hasErrors()) {
+//            List<MedicoEntity> medicos = medicoRepository.medicos();
+//            List<PacienteEntity> pacientes = pacienteRepository.pacientes();
+//            model.addAttribute("medicos", medicos);
+//            model.addAttribute("pacientes", pacientes);
+//            return "consulta/consultaForm";
+//        }
+//
+//        consultaRepository.save(consulta);
+//        return "redirect:/consultorio/consulta";
+//    }
 
     @GetMapping("/editar/{id}")
     public String editarConsulta(@PathVariable Long id, Model model) {

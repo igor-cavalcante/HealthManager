@@ -17,7 +17,7 @@ public class AgendamentoRepository {
     private EntityManager entityManager;
 
     public List<AgendamentoEntity> listarTodos() {
-        return entityManager.createQuery("SELECT a FROM AgendamentoEntity a JOIN FETCH a.medico", AgendamentoEntity.class)
+        return entityManager.createQuery("from AgendamentoEntity ", AgendamentoEntity.class)
                 .getResultList();
     }
 

@@ -37,8 +37,9 @@
                             <td>
                                 <span class="badge bg-success" th:text="${disponibilidade.status}"></span>
                             </td>
+                            <!-- Na lista de disponibilidades -->
                             <td>
-                                <a th:href="@{/consultorio/agendamento/novo/{id}(id=${disponibilidade.id})}"
+                                <a th:href="@{/consultorio/agendamento/novo}"
                                    class="btn btn-primary btn-sm">
                                     Agendar
                                 </a>
